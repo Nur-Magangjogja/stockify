@@ -11,23 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('Products', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('Category_id')
-            ->constrained()
-            ->cascadeOnUpdate()
-            ->restrictOnDelete();
-            $table->foreignId('Supplier_id')
-            ->constrained()
-            ->cascadeOnUpdate()
-            ->restrictOnDelete();
+            $table->foreignId('category_id')
+                ->constrained('categories')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+            $table->foreignId('supplier_id')
+                ->constrained('suppliers')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
             $table->string('name', 255);
             $table->string('sku', 100)->unique()->comment('Stock Keeping Unit');
             $table->text('description')->nullable();
             $table->decimal('purchase_price', 10, 2);
             $table->decimal('selling_price', 10, 2);
             $table->string('image')->default('noimage.png');
-            $table->integer('minimum_stock');
             $table->unsignedInteger('minimum_stock');
             $table->timestamps();
         });
@@ -38,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('Products');
+        Schema::dropIfExists('products');
     }
 };
