@@ -2,6 +2,7 @@
 
 namespace App\Services\Products;
 
+use Illuminate\Support\Facades\Log;
 use LaravelEasyRepository\Service;
 use App\Repositories\Products\ProductsRepository;
 

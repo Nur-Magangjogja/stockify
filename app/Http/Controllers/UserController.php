@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\User\UserRepository;
+use App\Services\User\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    protected $userRepository;
+    protected $userService;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserService $userService)
     {
-        $this->userRepository = $userRepository;
+        $this->userService = $userService;
     }
-    
-    private $userService;
 
     // public function __construct(UserService $userService)
     // {
@@ -28,7 +26,7 @@ class UserController extends Controller
      */
     public function findUserId($id)
     {
-        $result = $this->userRepository->getUserid($id);
+        $result = $this->userService->getUserid($id);
         return response()->json([
             "success" => true,
             "code" => 200,
