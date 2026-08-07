@@ -1,15 +1,27 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Suppilers;
-use Illuminate\Http\Request;
+
+use App\Services\Suppilers\SuppilersService;
+use Illuminate\Http\JsonResponse;
 
 class SuppilersController extends Controller
 {
-    public function index()
-    {
-        $Suppilers = Suppilers::all();
+    protected $suppilersService;
 
-        dd($Suppilers);
+    public function __construct(SuppilersService $suppilersService)
+    {
+        $this->suppilersService = $suppilersService;
+    }
+
+    public function getSuppliers($suppliersid): JsonResponse
+    {
+        $supplier = $this->suppilersService->getSuppliers($suppliersid);
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'data' => $supplier,
+        ]);
     }
 }
