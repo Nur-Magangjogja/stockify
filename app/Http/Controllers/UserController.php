@@ -14,6 +14,12 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
     
+    private $userService;
+
+    // public function __construct(UserService $userService)
+    // {
+    //     $this->userService = $userService;
+    // }
     /**
      * findUserId
      *
@@ -29,4 +35,9 @@ class UserController extends Controller
             "data" => $result
         ]);
     }
+    
+    // public function create(UserRequest)
+    // {
+
+    // }
 }
