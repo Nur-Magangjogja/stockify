@@ -8,33 +8,11 @@
     <meta name="description" content="@yield('meta_description', 'Stockify - Sistem Manajemen Stok Gudang')">
 
     {{-- Flowbite & Tailwind --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
-        * { font-family: 'Inter', sans-serif; }
-        :root {
-            --sidebar-width: 260px;
-            --topbar-height: 64px;
-            --color-primary: #2563EB;
-            --color-primary-dark: #1D4ED8;
-        }
-        .sidebar-item-active {
-            background: rgba(37, 99, 235, 0.15);
-            color: #60A5FA;
-            border-right: 3px solid #2563EB;
-        }
-        .sidebar-item-active svg { color: #60A5FA !important; }
-        .stock-badge-in { background: rgba(34, 197, 94, 0.15); color: #16a34a; }
-        .stock-badge-out { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
-        .gradient-card { background: linear-gradient(135deg, #1e3a5f 0%, #2563EB 100%); }
-        .gradient-card-green { background: linear-gradient(135deg, #064e3b 0%, #059669 100%); }
-        .gradient-card-amber { background: linear-gradient(135deg, #78350f 0%, #d97706 100%); }
-        .gradient-card-red { background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); }
-        [x-cloak] { display: none !important; }
-    </style>
     @stack('styles')
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased">
@@ -236,44 +214,7 @@
 
 {{-- Main content --}}
 <div class="sm:ml-64">
-    {{-- Top Bar --}}
-    <nav class="bg-gray-800 border-b border-gray-700 px-4 py-3 flex items-center gap-4">
-        <button type="button" data-drawer-target="sidebar" data-drawer-toggle="sidebar"
-            class="sm:hidden p-2 text-gray-400 rounded-lg hover:bg-gray-700">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
-            </svg>
-        </button>
-
-        <div class="flex-1">
-            <h2 class="text-lg font-semibold text-white">@yield('page-title', 'Dashboard')</h2>
-            <p class="text-xs text-gray-400">@yield('page-subtitle', '')</p>
-        </div>
-
-        <div class="flex items-center gap-3">
-            {{-- Notification badge for low stock --}}
-            @php $lowStockCount = \App\Models\Products::lowStock()->count(); @endphp
-            @if($lowStockCount > 0)
-            <div class="relative">
-                <a href="{{ route(auth()->user()->isAdmin() ? 'admin.products.index' : 'manager.products.index', ['stock_status' => 'low']) }}"
-                   class="p-2 text-amber-400 rounded-lg hover:bg-amber-900/20 transition-all relative">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                    </svg>
-                    <span class="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 text-xs text-white rounded-full flex items-center justify-center font-bold">
-                        {{ $lowStockCount > 9 ? '9+' : $lowStockCount }}
-                    </span>
-                </a>
-            </div>
-            @endif
-
-            <div class="text-right hidden sm:block">
-                <p class="text-sm font-medium text-white">{{ auth()->user()->name }}</p>
-                <p class="text-xs text-gray-400">{{ now()->translatedFormat('d M Y') }}</p>
-            </div>
-        </div>
-    </nav>
+    <x-dashboard-navbar />
 
     {{-- Page Content --}}
     <main class="p-4 min-h-screen">
@@ -319,9 +260,9 @@
 
         @yield('content')
     </main>
+    <x-dashboard-footer />
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 @stack('scripts')
 </body>
