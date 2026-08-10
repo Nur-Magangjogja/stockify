@@ -34,4 +34,34 @@ class SuppilersServiceImplement extends Service implements SuppilersService{
             return null;
         }
     }
+
+    public function getAllSuppliers(bool $activeOnly = false)
+    {
+        return $this->mainRepository->getAllSuppliers($activeOnly);
+    }
+
+    public function getAllSuppliersPaginated(int $perPage = 15)
+    {
+        return $this->mainRepository->getAllSuppliersPaginated($perPage);
+    }
+
+    public function getSupplier(int $id)
+    {
+        return $this->mainRepository->getSupplier($id);
+    }
+
+    public function createSupplier(array $data)
+    {
+        return $this->mainRepository->createSupplier($data);
+    }
+
+    public function updateSupplier(int $id, array $data)
+    {
+        return $this->mainRepository->updateSupplier($id, $data);
+    }
+
+    public function deleteSupplier(int $id): bool
+    {
+        return $this->mainRepository->deleteSupplier($id);
+    }
 }
