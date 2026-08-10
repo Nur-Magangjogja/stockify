@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product_attributes extends Model
 {
     use HasFactory;
+    protected $table = 'product_attributes';
     protected $fillable = [
         'product_id',
         'name',
@@ -15,6 +16,6 @@ class Product_attributes extends Model
     ];
     public function product()
 {
-    return $this->belongsTo(Product::class);
+    return $this->belongsTo(Products::class, 'product_id');
 }
 }
