@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +23,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/users/{id}', [UserController::class, 'findUserId']);
 Route::get('/products/{productid}', [ProductsController::class, 'getProducts']);
+Route::get('/categories/{categoriesid}', [CategoriesController::class, 'getCategories']);
+Route::get('/suppliers/{suppliersid}', [SuppilersController::class, 'getSuppliers']);

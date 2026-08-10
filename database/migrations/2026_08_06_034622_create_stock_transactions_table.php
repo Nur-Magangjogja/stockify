@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('stock_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('Product_id')
-            ->constrained()
+            $table->foreignId('product_id')
+            ->constrained('products')
             ->cascadeOnUpdate()
             ->restrictOnDelete();
-            $table->foreignId('User_id')
-            ->constrained()
+            $table->foreignId('user_id')
+            ->constrained('users')
             ->cascadeOnUpdate()
             ->restrictOnDelete();
             $table->enum('type', [
@@ -32,7 +32,7 @@ return new class extends Migration
                 'Diterima',
                 'Ditolak',
                 'Dikeluarkan'
-            ]);
+            ])->default('Pending');
             $table->text('notes')->nullable();
             $table->timestamps();
         });
@@ -43,6 +43,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('Stock_transactions');
+        Schema::dropIfExists('stock_transactions');
     }
 };

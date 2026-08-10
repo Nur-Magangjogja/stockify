@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Suppilers extends Model
 {
     use HasFactory;
+    protected $table = 'suppliers';
     protected $fillable = [
         'name',
         'address',
@@ -15,7 +16,18 @@ class Suppilers extends Model
         'email',
     ];
     public function products()
-{
-    return $this->hasMany(Product::class);
-}
+    {
+    return $this->hasMany(Products::class, 'supplier_id');
+    }
+    
+    public function stockTransactions()
+    {
+        return $this->hasMany(Stock_transaction::class, 'supplier_id');
+    }
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }
