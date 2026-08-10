@@ -28,7 +28,7 @@ class StockTransactionRepositoryImplement extends Eloquent implements StockTrans
      */
     public function getAll(array $filters = [], int $perPage = 15)
     {
-        $query = $this->model->with(['product', 'user'])
+        $query = $this->model->with(['product.stockTransactions', 'user'])
             ->orderBy('date', 'desc')
             ->orderBy('id', 'desc');
 

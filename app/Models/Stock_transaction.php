@@ -73,6 +73,44 @@ class Stock_transaction extends Model
         return $this->status;
     }
 
+    public function getStockBeforeAttribute(): int
+    {
+        $transactions = $this->product?->stockTransactions ?? collect();
+
+        return $transactions
+            ->filter(fn (self $transaction) => $this->isBefore($transaction))
+            ->sum(fn (self $transaction) => $transaction->signedQuantity());
+    }
+
+    public function getStockAfterAttribute(): int
+    {
+        $stockBefore = $this->stock_before;
+
+        if ($this->status !== self::STATUS_CONFIRMED) {
+            return $stockBefore;
+        }
+
+        return $stockBefore + $this->signedQuantity();
+    }
+
+    private function isBefore(self $transaction): bool
+    {
+        if ($transaction->id === $this->id || $transaction->status !== self::STATUS_CONFIRMED) {
+            return false;
+        }
+
+        $transactionDate = $transaction->date?->toDateString();
+        $thisDate = $this->date?->toDateString();
+
+        return $transactionDate < $thisDate
+            || ($transactionDate === $thisDate && $transaction->id < $this->id);
+    }
+
+    private function signedQuantity(): int
+    {
+        return $this->type === self::TYPE_IN ? (int) $this->quantity : -(int) $this->quantity;
+    }
+
     public function scopeIn($query)
     {
         return $query->where('type', self::TYPE_IN);
