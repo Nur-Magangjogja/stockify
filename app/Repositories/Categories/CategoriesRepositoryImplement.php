@@ -25,7 +25,7 @@ class CategoriesRepositoryImplement extends Eloquent implements CategoriesReposi
      * @param $categoriesid
      * @return mixed
      */
-    public function getCategories($categoriesid)
+    public function getCategories(int $categoriesid): ?Categories
     {
         return $this->model->find($categoriesid);
     }

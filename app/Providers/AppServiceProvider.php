@@ -19,6 +19,16 @@ use App\Repositories\Suppilers\SuppilersRepository;
 use App\Repositories\Suppilers\SuppilersRepositoryImplement;
 use App\Services\Suppilers\SuppilersService;
 use App\Services\Suppilers\SuppilersServiceImplement;
+use App\Repositories\ActivityLog\ActivityLogRepository;
+use App\Repositories\ActivityLog\ActivityLogRepositoryImplement;
+use App\Services\ActivityLog\ActivityLogService;
+use App\Services\ActivityLog\ActivityLogServiceImplement;
+use App\Repositories\StockTransaction\StockTransactionRepository;
+use App\Repositories\StockTransaction\StockTransactionRepositoryImplement;
+use App\Services\StockTransaction\StockTransactionService;
+use App\Services\StockTransaction\StockTransactionServiceImplement;
+use App\Services\Report\ReportService;
+use App\Services\Report\ReportServiceImplement;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,8 +43,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductsService::class, ProductsServiceImplement::class);
         $this->app->bind(CategoriesRepository::class, CategoriesRepositoryImplement::class);
         $this->app->bind(CategoriesService::class, CategoriesServiceImplement::class);
-        $this->app->bind(SuppliersRepository::class, SuppliersRepositoryImplement::class);
-        $this->app->bind(SuppliersService::class, SuppliersServiceImplement::class);
+        $this->app->bind(SuppilersRepository::class, SuppilersRepositoryImplement::class);
+        $this->app->bind(SuppilersService::class, SuppilersServiceImplement::class);
+        $this->app->bind(ActivityLogRepository::class, ActivityLogRepositoryImplement::class);
+        $this->app->bind(ActivityLogService::class, ActivityLogServiceImplement::class);
+        $this->app->bind(StockTransactionRepository::class, StockTransactionRepositoryImplement::class);
+        $this->app->bind(StockTransactionService::class, StockTransactionServiceImplement::class);
+        $this->app->bind(ReportService::class, ReportServiceImplement::class);
     }
 
     /**

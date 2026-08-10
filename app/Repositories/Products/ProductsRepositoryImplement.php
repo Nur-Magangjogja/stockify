@@ -29,4 +29,14 @@ class ProductsRepositoryImplement extends Eloquent implements ProductsRepository
     {
         return $this->model->where('id', $productid)->first();
     }
+
+    public function findById(int $id): Products
+    {
+        return $this->model->findOrFail($id);
+    }
+
+    public function updateStock(int $id, int $stock): bool
+    {
+        return (bool) $this->model->whereKey($id)->update(['stock' => $stock]);
+    }
 }

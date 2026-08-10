@@ -29,4 +29,37 @@ class SuppilersRepositoryImplement extends Eloquent implements SuppilersReposito
     {
         return $this->model->find($suppliersid);
     }
+
+    public function getAllSuppliers(bool $activeOnly = false)
+    {
+        return $this->model->orderBy('name')->get();
+    }
+
+    public function getAllSuppliersPaginated(int $perPage = 15, bool $activeOnly = false)
+    {
+        return $this->model->orderBy('name')->paginate($perPage);
+    }
+
+    public function getSupplier(int $id): Suppilers
+    {
+        return $this->model->findOrFail($id);
+    }
+
+    public function createSupplier(array $data): Suppilers
+    {
+        return $this->model->create($data);
+    }
+
+    public function updateSupplier(int $id, array $data): Suppilers
+    {
+        $supplier = $this->model->findOrFail($id);
+        $supplier->update($data);
+
+        return $supplier->refresh();
+    }
+
+    public function deleteSupplier(int $id): bool
+    {
+        return (bool) $this->model->findOrFail($id)->delete();
+    }
 }

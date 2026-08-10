@@ -3,6 +3,7 @@
 namespace App\Repositories\Categories;
 
 use LaravelEasyRepository\Repository;
+use App\Models\Categories;
 
 interface CategoriesRepository extends Repository{
     
@@ -12,5 +13,5 @@ interface CategoriesRepository extends Repository{
      * @param $categoriesid
      * @return mixed
      */
-    public function getCategories($categoriesid);
+    public function getCategories(int $categoriesid): ?Categories;
 }
