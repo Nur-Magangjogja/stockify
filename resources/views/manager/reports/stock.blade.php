@@ -1,0 +1,1 @@
+@include('admin.reports.stock')
