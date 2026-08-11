@@ -44,15 +44,65 @@
                 <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
                     <h3 class="text-sm font-semibold text-white mb-4 pb-3 border-b border-gray-700">Harga & Stok</h3>
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
+                        <div x-data="{ 
+                            rawValue: '{{ old('buy_price', $product->buy_price ?? 0) }}',
+                            displayValue: '0',
+                            init() { this.updateDisplay(); },
+                            updateDisplay() {
+                                let num = parseInt(this.rawValue.toString().replace(/[^0-9]/g, '')) || 0;
+                                this.displayValue = new Intl.NumberFormat('en-US').format(num);
+                            },
+                            onInput(e) {
+                                let num = parseInt(e.target.value.replace(/[^0-9]/g, '')) || 0;
+                                this.rawValue = num;
+                                let oldLength = e.target.value.length;
+                                let cursorOffset = oldLength - e.target.selectionStart;
+                                this.displayValue = new Intl.NumberFormat('en-US').format(num);
+                                this.$nextTick(() => {
+                                    let newLength = this.displayValue.length;
+                                    let pos = Math.max(0, newLength - cursorOffset);
+                                    e.target.setSelectionRange(pos, pos);
+                                });
+                            }
+                        }">
                             <label class="block text-sm font-medium text-gray-300 mb-1.5">Harga Beli (Rp) <span class="text-red-400">*</span></label>
-                            <input type="number" name="buy_price" value="{{ old('buy_price', $product->buy_price) }}" min="0" step="100" required
-                                class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+                            <input type="hidden" name="buy_price" :value="rawValue">
+                            <div class="relative flex items-center bg-gray-900 border border-gray-600 rounded-lg focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500 overflow-hidden">
+                                <span class="pl-3 text-gray-500 text-sm font-medium">Rp</span>
+                                <input type="text" x-model="displayValue" @input="onInput" required
+                                    class="w-full bg-transparent border-none text-gray-300 text-sm px-2 py-2.5 focus:ring-0">
+                                <span class="pr-3 text-gray-500 text-sm">.00</span>
+                            </div>
                         </div>
-                        <div>
+                        <div x-data="{ 
+                            rawValue: '{{ old('sell_price', $product->sell_price ?? 0) }}',
+                            displayValue: '0',
+                            init() { this.updateDisplay(); },
+                            updateDisplay() {
+                                let num = parseInt(this.rawValue.toString().replace(/[^0-9]/g, '')) || 0;
+                                this.displayValue = new Intl.NumberFormat('en-US').format(num);
+                            },
+                            onInput(e) {
+                                let num = parseInt(e.target.value.replace(/[^0-9]/g, '')) || 0;
+                                this.rawValue = num;
+                                let oldLength = e.target.value.length;
+                                let cursorOffset = oldLength - e.target.selectionStart;
+                                this.displayValue = new Intl.NumberFormat('en-US').format(num);
+                                this.$nextTick(() => {
+                                    let newLength = this.displayValue.length;
+                                    let pos = Math.max(0, newLength - cursorOffset);
+                                    e.target.setSelectionRange(pos, pos);
+                                });
+                            }
+                        }">
                             <label class="block text-sm font-medium text-gray-300 mb-1.5">Harga Jual (Rp) <span class="text-red-400">*</span></label>
-                            <input type="number" name="sell_price" value="{{ old('sell_price', $product->sell_price) }}" min="0" step="100" required
-                                class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+                            <input type="hidden" name="sell_price" :value="rawValue">
+                            <div class="relative flex items-center bg-gray-900 border border-gray-600 rounded-lg focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500 overflow-hidden">
+                                <span class="pl-3 text-gray-500 text-sm font-medium">Rp</span>
+                                <input type="text" x-model="displayValue" @input="onInput" required
+                                    class="w-full bg-transparent border-none text-gray-300 text-sm px-2 py-2.5 focus:ring-0">
+                                <span class="pr-3 text-gray-500 text-sm">.00</span>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-300 mb-1.5">
@@ -120,9 +170,9 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-1.5">Supplier</label>
-                            <select name="supplier_id" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="">-- Tanpa Supplier --</option>
+                            <label class="block text-sm font-medium text-gray-300 mb-1.5">Supplier <span class="text-red-400">*</span></label>
+                            <select name="supplier_id" required class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">-- Pilih Supplier --</option>
                                 @foreach($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}" {{ old('supplier_id', $product->supplier_id) == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option>
                                 @endforeach
