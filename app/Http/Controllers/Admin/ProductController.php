@@ -35,16 +35,22 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        if (!$request->filled('code')) {
+            $request->merge([
+                'code' => 'PRD-' . strtoupper(\Illuminate\Support\Str::random(8))
+            ]);
+        }
+
         $validated = $request->validate([
             'name'        => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'supplier_id' => 'nullable|exists:suppliers,id',
+            'supplier_id' => 'required|exists:suppliers,id',
             'code'        => 'required|string|max:100|unique:products,sku',
             'description' => 'nullable|string',
             'buy_price'   => 'required|numeric|min:0',
             'sell_price'  => 'required|numeric|min:0',
             'min_stock'   => 'required|integer|min:0',
-            'image'       => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'attributes'  => 'nullable|array',
             'attributes.*.attribute_name'  => 'required_with:attributes|string|max:100',
             'attributes.*.attribute_value' => 'required_with:attributes|string|max:255',
@@ -79,10 +85,16 @@ class ProductController extends Controller
 
     public function update(Request $request, int $id)
     {
+        if (!$request->filled('code')) {
+            $request->merge([
+                'code' => 'PRD-' . strtoupper(\Illuminate\Support\Str::random(8))
+            ]);
+        }
+
         $validated = $request->validate([
             'name'        => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'supplier_id' => 'nullable|exists:suppliers,id',
+            'supplier_id' => 'required|exists:suppliers,id',
             'code'        => "required|string|max:100|unique:products,sku,{$id}",
             'description' => 'nullable|string',
             'buy_price'   => 'required|numeric|min:0',
@@ -114,6 +126,11 @@ class ProductController extends Controller
             $this->productService->deleteProduct($id);
             return redirect()->route('admin.products.index')
                 ->with('success', 'Produk berhasil dihapus.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == "23000") {
+                return back()->with('error', 'Produk tidak dapat dihapus karena masih terhubung dengan data riwayat transaksi stok.');
+            }
+            return back()->with('error', 'Terjadi kesalahan database: ' . $e->getMessage());
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }

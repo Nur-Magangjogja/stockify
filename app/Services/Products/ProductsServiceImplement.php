@@ -98,6 +98,11 @@ class ProductsServiceImplement extends Service implements ProductsService{
     public function deleteProduct(int $id): bool
     {
       $product = Products::findOrFail($id);
+      
+      // Hapus data relasi agar tidak terkena constraint foreign key
+      $product->stockTransactions()->delete();
+      $product->attributes()->delete();
+
       if ($product->image) {
           \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
       }
