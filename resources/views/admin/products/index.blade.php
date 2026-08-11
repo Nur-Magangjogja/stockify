@@ -5,20 +5,12 @@
 
 @section('content')
 {{-- Header --}}
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
-    <div class="flex items-center gap-2">
-        <span class="text-sm text-gray-400">{{ $products->total() }} produk ditemukan</span>
-    </div>
-    @if(auth()->user()->isAdmin())
-    <a href="{{ route('admin.products.create') }}"
-       class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-        </svg>
-        Tambah Produk
-    </a>
-    @endif
-</div>
+<x-page-header
+    :count="$products->total()"
+    count-label="produk ditemukan"
+    :href="auth()->user()->isAdmin() ? route('admin.products.create') : null"
+    btn-label="Tambah Produk"
+/>
 
 {{-- Filter --}}
 <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-5">
@@ -106,13 +98,10 @@
                         <span class="text-gray-300">Rp {{ number_format($product->sell_price, 0, ',', '.') }}</span>
                     </td>
                     <td class="px-4 py-4">
-                        @if($product->stock <= 0)
-                            <span class="px-2.5 py-1 bg-red-900/40 text-red-400 text-xs font-medium rounded-full">Habis</span>
-                        @elseif($product->is_low_stock)
-                            <span class="px-2.5 py-1 bg-amber-900/40 text-amber-400 text-xs font-medium rounded-full">Menipis</span>
-                        @else
-                            <span class="px-2.5 py-1 bg-green-900/40 text-green-400 text-xs font-medium rounded-full">Tersedia</span>
-                        @endif
+                        <x-stock-badge
+                            :stock="$product->stock"
+                            :min-stock="$product->min_stock"
+                        />
                     </td>
                     <td class="px-4 py-4 text-right">
                         <div class="flex items-center justify-end gap-1">
@@ -145,27 +134,14 @@
                     </td>
                 </tr>
                 @empty
-                <tr>
-                    <td colspan="7" class="px-5 py-16 text-center">
-                        <div class="text-gray-500">
-                            <svg class="w-12 h-12 mx-auto mb-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-                            </svg>
-                            <p class="text-sm font-medium">Tidak ada produk ditemukan</p>
-                            <p class="text-xs mt-1">Coba ubah filter pencarian atau tambah produk baru</p>
-                        </div>
-                    </td>
-                </tr>
+                <x-table-empty :colspan="7" message="Tidak ada produk ditemukan">
+                    <x-slot:sub>Coba ubah filter pencarian atau tambah produk baru</x-slot:sub>
+                </x-table-empty>
                 @endforelse
             </tbody>
         </table>
     </div>
 
-    @if($products->hasPages())
-    <div class="px-5 py-4 border-t border-gray-700">
-        {{ $products->links() }}
-    </div>
-    @endif
+    <x-table-pagination :paginator="$products" />
 </div>
 @endsection

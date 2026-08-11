@@ -27,13 +27,7 @@
         <div class="auth-card rounded-2xl p-8 shadow-2xl">
             <h2 class="text-xl font-semibold text-white mb-6">Masuk ke Akun Anda</h2>
 
-            @if($errors->any())
-            <div class="p-3 mb-4 rounded-lg bg-red-900/30 border border-red-700 text-red-300 text-sm">
-                @foreach($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-            @endif
+            <x-form-errors />
 
             <form action="{{ route('login.post') }}" method="POST" id="login-form">
                 @csrf

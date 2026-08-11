@@ -4,18 +4,12 @@
 @section('page-subtitle', 'Kelola data supplier')
 
 @section('content')
-<div class="flex justify-between items-center mb-5">
-    <span class="text-sm text-gray-400">{{ $suppliers->total() }} supplier</span>
-    @if(auth()->user()->isAdmin())
-    <a href="{{ route('admin.suppliers.create') }}"
-       class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-        </svg>
-        Tambah Supplier
-    </a>
-    @endif
-</div>
+<x-page-header
+    :count="$suppliers->total()"
+    count-label="supplier"
+    :href="auth()->user()->isAdmin() ? route('admin.suppliers.create') : null"
+    btn-label="Tambah Supplier"
+/>
 
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
     @forelse($suppliers as $supplier)

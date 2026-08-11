@@ -57,12 +57,10 @@
                 <td class="px-4 py-3.5 text-gray-400 text-xs">{{ $log->created_at->format('d M Y H:i') }}</td>
             </tr>
             @empty
-            <tr><td colspan="5" class="px-5 py-12 text-center text-gray-500">Tidak ada data aktivitas</td></tr>
+            <x-table-empty :colspan="5" message="Tidak ada data aktivitas" />
             @endforelse
         </tbody>
     </table>
-    @if($activities->hasPages())
-    <div class="px-5 py-4 border-t border-gray-700">{{ $activities->links() }}</div>
-    @endif
+    <x-table-pagination :paginator="$activities" />
 </div>
 @endsection

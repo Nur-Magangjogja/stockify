@@ -4,16 +4,12 @@
 @section('page-subtitle', 'Kelola kategori produk')
 
 @section('content')
-<div class="flex justify-between items-center mb-5">
-    <span class="text-sm text-gray-400">{{ $categories->total() }} kategori</span>
-    <a href="{{ route('admin.categories.create') }}"
-       class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-        </svg>
-        Tambah Kategori
-    </a>
-</div>
+<x-page-header
+    :count="$categories->total()"
+    count-label="kategori"
+    :href="route('admin.categories.create')"
+    btn-label="Tambah Kategori"
+/>
 
 <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
     <table class="w-full text-sm text-left">
@@ -57,14 +53,10 @@
                 </td>
             </tr>
             @empty
-            <tr>
-                <td colspan="5" class="px-5 py-12 text-center text-gray-500 text-sm">Belum ada kategori</td>
-            </tr>
+            <x-table-empty :colspan="2" message="Belum ada kategori" />
             @endforelse
         </tbody>
     </table>
-    @if($categories->hasPages())
-    <div class="px-5 py-4 border-t border-gray-700">{{ $categories->links() }}</div>
-    @endif
+    <x-table-pagination :paginator="$categories" />
 </div>
 @endsection

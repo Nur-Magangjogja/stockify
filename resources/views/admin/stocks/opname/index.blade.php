@@ -27,7 +27,7 @@
                 @forelse($products as $product)
                     <tr><td class="px-5 py-3"><p class="text-white font-medium">{{ $product->name }}</p><p class="text-xs text-gray-400">{{ $product->sku }}</p></td><td class="px-4 py-3 text-center text-gray-300">{{ $product->stock }}</td><td class="px-4 py-3 text-center"><input type="number" name="stocks[{{ $product->id }}]" value="{{ old('stocks.' . $product->id, $product->stock) }}" min="0" required data-system="{{ $product->stock }}" class="w-24 bg-gray-900 border border-gray-600 text-center text-white rounded-lg px-2 py-1.5"></td><td class="px-4 py-3 text-center text-gray-400" data-difference>0</td></tr>
                 @empty
-                    <tr><td colspan="4" class="px-5 py-10 text-center text-gray-500">Belum ada produk.</td></tr>
+                    <x-table-empty :colspan="4" message="Belum ada produk." />
                 @endforelse
                 </tbody>
             </table>

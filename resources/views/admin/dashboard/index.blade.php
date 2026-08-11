@@ -7,73 +7,49 @@
 @section('content')
 {{-- Stats Cards --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-    {{-- Total Produk --}}
-    <div class="gradient-card rounded-xl p-5 text-white shadow-lg">
-        <div class="flex items-start justify-between">
-            <div>
-                <p class="text-blue-200 text-xs font-medium uppercase tracking-wide">Total Produk</p>
-                <p class="text-3xl font-bold mt-1">{{ number_format($stats['total_products']) }}</p>
-                <p class="text-blue-200 text-xs mt-2">{{ $stats['low_stock_count'] }} stok menipis</p>
-            </div>
-            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-                </svg>
-            </div>
-        </div>
-    </div>
 
-    {{-- Nilai Stok --}}
-    <div class="gradient-card-green rounded-xl p-5 text-white shadow-lg">
-        <div class="flex items-start justify-between">
-            <div>
-                <p class="text-green-200 text-xs font-medium uppercase tracking-wide">Nilai Stok</p>
-                <p class="text-2xl font-bold mt-1">Rp {{ number_format($stats['total_stock_value'], 0, ',', '.') }}</p>
-                <p class="text-green-200 text-xs mt-2">Total nilai inventaris</p>
-            </div>
-            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
-        </div>
-    </div>
+    <x-stat-card color="blue" label="Total Produk"
+        :value="number_format($stats['total_products'])"
+        :sub="$stats['low_stock_count'] . ' stok menipis'">
+        <x-slot:icon>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+            </svg>
+        </x-slot:icon>
+    </x-stat-card>
 
-    {{-- Masuk Hari Ini --}}
-    <div class="gradient-card-amber rounded-xl p-5 text-white shadow-lg">
-        <div class="flex items-start justify-between">
-            <div>
-                <p class="text-amber-200 text-xs font-medium uppercase tracking-wide">Masuk Hari Ini</p>
-                <p class="text-3xl font-bold mt-1">{{ $stats['today_in'] }}</p>
-                <p class="text-amber-200 text-xs mt-2">{{ $stats['month_in_qty'] }} unit bulan ini</p>
-            </div>
-            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
-                </svg>
-            </div>
-        </div>
-    </div>
+    <x-stat-card color="green" label="Nilai Stok"
+        :value="'Rp ' . number_format($stats['total_stock_value'], 0, ',', '.')"
+        sub="Total nilai inventaris">
+        <x-slot:icon>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+        </x-slot:icon>
+    </x-stat-card>
 
-    {{-- Keluar Hari Ini --}}
-    <div class="gradient-card-red rounded-xl p-5 text-white shadow-lg">
-        <div class="flex items-start justify-between">
-            <div>
-                <p class="text-red-200 text-xs font-medium uppercase tracking-wide">Keluar Hari Ini</p>
-                <p class="text-3xl font-bold mt-1">{{ $stats['today_out'] }}</p>
-                <p class="text-red-200 text-xs mt-2">{{ $stats['month_out_qty'] }} unit bulan ini</p>
-            </div>
-            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 8V20M17 20l4-4m-4 4l-4-4M7 4L3 8m4-4l4 4M7 4v12"/>
-                </svg>
-            </div>
-        </div>
-    </div>
+    <x-stat-card color="amber" label="Masuk Hari Ini"
+        :value="$stats['today_in']"
+        :sub="$stats['month_in_qty'] . ' unit bulan ini'">
+        <x-slot:icon>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+            </svg>
+        </x-slot:icon>
+    </x-stat-card>
+
+    <x-stat-card color="red" label="Keluar Hari Ini"
+        :value="$stats['today_out']"
+        :sub="$stats['month_out_qty'] . ' unit bulan ini'">
+        <x-slot:icon>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8V20M17 20l4-4m-4 4l-4-4M7 4L3 8m4-4l4 4M7 4v12"/>
+            </svg>
+        </x-slot:icon>
+    </x-stat-card>
+
 </div>
 
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
@@ -101,9 +77,7 @@
         <h3 class="text-base font-semibold text-white mb-4">Stok per Kategori</h3>
         @if(!empty($stats['stock_by_category']))
         <div class="space-y-3">
-            @php
-                $maxStock = max(array_column($stats['stock_by_category'], 'total_stock'));
-            @endphp
+            @php $maxStock = max(array_column($stats['stock_by_category'], 'total_stock')); @endphp
             @foreach($stats['stock_by_category'] as $cat)
             <div>
                 <div class="flex justify-between text-sm mb-1">
@@ -188,10 +162,10 @@
 {{-- User Stats --}}
 <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
     @foreach([
-        ['label' => 'Total Pengguna', 'value' => $userStats['total_users'], 'color' => 'text-blue-400'],
-        ['label' => 'Admin', 'value' => $userStats['total_admin'], 'color' => 'text-purple-400'],
-        ['label' => 'Manajer', 'value' => $userStats['total_managers'], 'color' => 'text-green-400'],
-        ['label' => 'Staff', 'value' => $userStats['total_staff'], 'color' => 'text-amber-400'],
+        ['label' => 'Total Pengguna', 'value' => $userStats['total_users'],    'color' => 'text-blue-400'],
+        ['label' => 'Admin',          'value' => $userStats['total_admin'],     'color' => 'text-purple-400'],
+        ['label' => 'Manajer',        'value' => $userStats['total_managers'],  'color' => 'text-green-400'],
+        ['label' => 'Staff',          'value' => $userStats['total_staff'],     'color' => 'text-amber-400'],
     ] as $stat)
     <div class="bg-gray-800 rounded-xl border border-gray-700 p-4 text-center">
         <p class="text-2xl font-bold {{ $stat['color'] }}">{{ $stat['value'] }}</p>
@@ -200,4 +174,3 @@
     @endforeach
 </div>
 @endsection
-

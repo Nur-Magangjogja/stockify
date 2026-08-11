@@ -98,12 +98,10 @@
                 </td>
             </tr>
             @empty
-            <tr><td colspan="5" class="px-5 py-12 text-center text-gray-500 text-sm">Tidak ada pengguna ditemukan</td></tr>
+            <x-table-empty :colspan="5" message="Tidak ada pengguna ditemukan" />
             @endforelse
         </tbody>
     </table>
-    @if($users->hasPages())
-    <div class="px-5 py-4 border-t border-gray-700">{{ $users->links() }}</div>
-    @endif
+    <x-table-pagination :paginator="$users" />
 </div>
 @endsection

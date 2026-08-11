@@ -123,15 +123,11 @@
                     </td>
                 </tr>
                 @empty
-                <tr>
-                    <td colspan="8" class="px-5 py-12 text-center text-gray-500 text-sm">Tidak ada transaksi ditemukan</td>
-                </tr>
+                <x-table-empty :colspan="8" message="Tidak ada transaksi ditemukan" />
                 @endforelse
             </tbody>
         </table>
     </div>
-    @if($transactions->hasPages())
-    <div class="px-5 py-4 border-t border-gray-700">{{ $transactions->links() }}</div>
-    @endif
+    <x-table-pagination :paginator="$transactions" />
 </div>
 @endsection

@@ -84,7 +84,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="px-5 py-12 text-center text-gray-500">Tidak ada data</td></tr>
+                <x-table-empty :colspan="6" message="Tidak ada data" />
                 @endforelse
             </tbody>
         </table>
