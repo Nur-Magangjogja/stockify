@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Stockify</title>
-    <meta name="description" content="Login ke Stockify - Sistem Manajemen Stok Gudang">
+    <title>Login — {{ $appName }}</title>
+    <meta name="description" content="Login ke {{ $appName }} - Sistem Manajemen Stok Gudang">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -13,13 +13,19 @@
     <div class="w-full max-w-md">
         {{-- Logo --}}
         <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/30">
-                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                </svg>
-            </div>
-            <h1 class="text-3xl font-bold text-white">Stockify</h1>
+            @if($appLogo)
+                <div class="w-20 h-20 mx-auto mb-4 bg-gray-900 rounded-2xl flex items-center justify-center p-2 shadow-lg shadow-blue-500/10 border border-gray-700">
+                    <img src="{{ asset($appLogo) }}" alt="Logo" class="w-full h-full object-contain">
+                </div>
+            @else
+                <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/30">
+                    <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                </div>
+            @endif
+            <h1 class="text-3xl font-bold text-white">{{ $appName }}</h1>
             <p class="text-gray-400 mt-1 text-sm">Sistem Manajemen Stok Gudang</p>
         </div>
 

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Stockify') — Stockify</title>
-    <meta name="description" content="@yield('meta_description', 'Stockify - Sistem Manajemen Stok Gudang')">
+    <title>@yield('title', $appName) — {{ $appName }}</title>
+    <meta name="description" content="@yield('meta_description', $appName . ' - Sistem Manajemen Stok Gudang')">
 
     {{-- Flowbite & Tailwind --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -44,6 +44,11 @@ Route::prefix('admin')
     ->group(function () {
     
     Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->name('dashboard');
+    
+    // Settings Route
+    Route::get('/settings', [Admin\SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [Admin\SettingController::class, 'update'])->name('settings.update');
+
     Route::resource('products', Admin\ProductController::class);
     Route::resource('categories', Admin\CategoryController::class)->except(['show']);
     Route::resource('suppliers', Admin\SupplierController::class)->except(['show']);

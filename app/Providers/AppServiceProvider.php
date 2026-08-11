@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+use App\Services\Settings\SettingService;
 use App\Repositories\User\UserRepository;
 use App\Repositories\User\UserRepositoryImplement;
 use App\Services\User\UserService;
@@ -57,6 +59,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Share App Settings Globally
+        try {
+            $settingService = app(SettingService::class);
+            $settings = $settingService->getSettings();
+            
+            View::share('appName', $settings['app_name'] ?? 'Stockify');
+            View::share('appLogo', $settings['app_logo'] ?? null);
+        } catch (\Exception $e) {
+            View::share('appName', 'Stockify');
+            View::share('appLogo', null);
+        }
     }
 }
