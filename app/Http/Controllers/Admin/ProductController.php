@@ -47,8 +47,9 @@ class ProductController extends Controller
             'supplier_id' => 'required|exists:suppliers,id',
             'code'        => 'required|string|max:100|unique:products,sku',
             'description' => 'nullable|string',
-            'buy_price'   => 'required|numeric|min:0',
-            'sell_price'  => 'required|numeric|min:0',
+            'buy_price'   => 'required|numeric|min:0|max:999999999999',
+            'sell_price'  => 'required|numeric|min:0|max:999999999999',
+            'stock'       => 'required|integer|min:0',
             'min_stock'   => 'required|integer|min:0',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'attributes'  => 'nullable|array',
@@ -61,6 +62,18 @@ class ProductController extends Controller
                 $validated,
                 $request->file('image')
             );
+
+            if ($request->stock > 0) {
+                \App\Models\Stock_transaction::create([
+                    'product_id' => $product->id,
+                    'user_id'    => auth()->id() ?? 1,
+                    'type'       => \App\Models\Stock_transaction::TYPE_IN,
+                    'quantity'   => $request->stock,
+                    'date'       => now()->toDateString(),
+                    'status'     => \App\Models\Stock_transaction::STATUS_CONFIRMED,
+                    'notes'      => 'Stok awal produk',
+                ]);
+            }
 
             return redirect()->route('admin.products.show', $product->id)
                 ->with('success', "Produk <strong>{$product->name}</strong> berhasil ditambahkan.");
@@ -97,8 +110,8 @@ class ProductController extends Controller
             'supplier_id' => 'required|exists:suppliers,id',
             'code'        => "required|string|max:100|unique:products,sku,{$id}",
             'description' => 'nullable|string',
-            'buy_price'   => 'required|numeric|min:0',
-            'sell_price'  => 'required|numeric|min:0',
+            'buy_price'   => 'required|numeric|min:0|max:999999999999',
+            'sell_price'  => 'required|numeric|min:0|max:999999999999',
             'min_stock'   => 'required|integer|min:0',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'attributes'  => 'nullable|array',

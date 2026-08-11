@@ -54,6 +54,7 @@
                             },
                             onInput(e) {
                                 let num = parseInt(e.target.value.replace(/[^0-9]/g, '')) || 0;
+                                if (num > 999999999999) num = 999999999999;
                                 this.rawValue = num;
                                 let oldLength = e.target.value.length;
                                 let cursorOffset = oldLength - e.target.selectionStart;
@@ -84,6 +85,7 @@
                             },
                             onInput(e) {
                                 let num = parseInt(e.target.value.replace(/[^0-9]/g, '')) || 0;
+                                if (num > 999999999999) num = 999999999999;
                                 this.rawValue = num;
                                 let oldLength = e.target.value.length;
                                 let cursorOffset = oldLength - e.target.selectionStart;

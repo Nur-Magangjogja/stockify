@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('name', 255);
             $table->string('sku', 100)->unique()->comment('Stock Keeping Unit');
             $table->text('description')->nullable();
-            $table->decimal('purchase_price', 10, 2);
-            $table->decimal('selling_price', 10, 2);
+            $table->decimal('purchase_price', 16, 2);
+            $table->decimal('selling_price', 16, 2);
             $table->string('image')->default('noimage.png');
             $table->unsignedInteger('minimum_stock');
             $table->timestamps();
