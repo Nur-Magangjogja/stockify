@@ -132,7 +132,7 @@
                                 </svg>
                             </a>
                             <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="inline"
-                                  onsubmit="return confirm('Hapus produk {{ addslashes($product->name) }}?')">
+                                data-confirm="{{ e('Hapus produk ' . $product->name . '?') }}">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="p-1.5 text-gray-400 hover:text-red-400 rounded-lg hover:bg-red-900/20 transition-all" title="Hapus">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

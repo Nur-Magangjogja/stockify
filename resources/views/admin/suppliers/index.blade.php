@@ -68,7 +68,7 @@
                     </svg>
                 </a>
                 <form action="{{ route('admin.suppliers.destroy', $supplier->id) }}" method="POST"
-                      onsubmit="return confirm('Hapus supplier {{ addslashes($supplier->name) }}?')">
+                            data-confirm="{{ e('Hapus supplier ' . $supplier->name . '?') }}">
                     @csrf @method('DELETE')
                     <button class="p-1.5 text-gray-400 hover:text-red-400 rounded-lg hover:bg-red-900/20 transition-all">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

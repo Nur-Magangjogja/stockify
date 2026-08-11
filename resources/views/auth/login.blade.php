@@ -7,42 +7,8 @@
     <meta name="description" content="Login ke Stockify - Sistem Manajemen Stok Gudang">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: 'Inter', sans-serif; }
-        body {
-            background: radial-gradient(ellipse at 20% 50%, rgba(37, 99, 235, 0.12) 0%, transparent 60%),
-                        radial-gradient(ellipse at 80% 20%, rgba(79, 70, 229, 0.08) 0%, transparent 50%),
-                        #111827;
-        }
-        .auth-card {
-            background: rgba(31, 41, 55, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(75, 85, 99, 0.5);
-        }
-        .input-field {
-            background: rgba(17, 24, 39, 0.8);
-            border: 1px solid rgba(75, 85, 99, 0.6);
-            color: #f3f4f6;
-            transition: all 0.2s;
-        }
-        .input-field:focus {
-            border-color: #2563EB;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-            outline: none;
-        }
-        .input-field::placeholder { color: #6b7280; }
-        .btn-primary {
-            background: linear-gradient(135deg, #2563EB, #4F46E5);
-            transition: all 0.2s;
-        }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #1D4ED8, #4338CA);
-            transform: translateY(-1px);
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
-        }
-    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="auth-page min-h-screen flex items-center justify-center p-4">
 
     <div class="w-full max-w-md">
         {{-- Logo --}}
@@ -131,12 +97,5 @@
         </p>
     </div>
 
-    <script>
-        const toggleBtn = document.getElementById('toggle-password');
-        const pwdInput  = document.getElementById('password');
-        toggleBtn.addEventListener('click', () => {
-            pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
-        });
-    </script>
 </body>
 </html>

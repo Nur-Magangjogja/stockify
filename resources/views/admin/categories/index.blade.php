@@ -44,7 +44,7 @@
                         </a>
                         @if($category->products_count == 0)
                         <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST"
-                              onsubmit="return confirm('Hapus kategori {{ addslashes($category->name) }}?')">
+                            data-confirm="{{ e('Hapus kategori ' . $category->name . '?') }}">
                             @csrf @method('DELETE')
                             <button class="p-1.5 text-gray-400 hover:text-red-400 rounded-lg hover:bg-red-900/20 transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -87,24 +87,3 @@
 </div>
 @endsection
 
-@push('scripts')
-<script>
-const select = document.getElementById('product-select');
-const infoBox = document.getElementById('product-info');
-const currentStockEl = document.getElementById('current-stock');
-const unitPriceEl = document.getElementById('unit-price');
-
-select.addEventListener('change', function() {
-    const opt = this.options[this.selectedIndex];
-    if (this.value) {
-        currentStockEl.textContent = opt.dataset.stock + ' ' + opt.dataset.unit;
-        if (!unitPriceEl.value) unitPriceEl.value = opt.dataset.price;
-        infoBox.classList.remove('hidden');
-    } else {
-        infoBox.classList.add('hidden');
-    }
-});
-// Trigger on load if pre-selected
-if (select.value) select.dispatchEvent(new Event('change'));
-</script>
-@endpush

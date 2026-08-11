@@ -14,8 +14,8 @@
         </svg>
     </a>
     @if($opname->status !== 'completed' && $opname->status !== 'cancelled')
-    <form action="{{ route("{$prefix}.stocks.opname.complete", $opname->id) }}" method="POST" class="ml-auto"
-          onsubmit="return confirm('Selesaikan opname ini? Stok produk akan diperbarui sesuai data fisik.')">
+        <form action="{{ route("{$prefix}.stocks.opname.complete", $opname->id) }}" method="POST" class="ml-auto"
+            data-confirm="Selesaikan opname ini? Stok produk akan diperbarui sesuai data fisik.">
         @csrf
         <button class="px-4 py-2 bg-green-700 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-all">
             ✓ Selesaikan Opname
@@ -60,12 +60,12 @@
                             value="{{ $detail->actual_stock }}"
                             class="w-20 bg-gray-900 border border-gray-600 text-center text-white text-sm rounded-lg px-2 py-1.5 focus:ring-blue-500 focus:border-blue-500"
                             data-system="{{ $detail->system_stock }}"
-                            oninput="updateDiff(this)">
+                            >
                         @else
                         <span class="font-mono text-white">{{ $detail->actual_stock }}</span>
                         @endif
                     </td>
-                    <td class="px-4 py-3.5 text-center" id="diff-{{ $i }}">
+                    <td class="px-4 py-3.5 text-center" id="diff-{{ $i }}" data-difference>
                         @php $diff = $detail->difference; @endphp
                         <span class="font-semibold {{ $diff > 0 ? 'text-green-400' : ($diff < 0 ? 'text-red-400' : 'text-gray-400') }}">
                             {{ $diff > 0 ? '+' : '' }}{{ $diff }}
@@ -99,16 +99,3 @@
 
 @endsection
 
-@push('scripts')
-<script>
-function updateDiff(input) {
-    const row = input.closest('tr');
-    const systemStock = parseInt(input.dataset.system);
-    const actualStock = parseInt(input.value) || 0;
-    const diff = actualStock - systemStock;
-    const diffIdx = input.name.match(/\[(\d+)\]/)[1];
-    const diffEl = document.getElementById('diff-' + diffIdx);
-    diffEl.innerHTML = `<span class="font-semibold ${diff > 0 ? 'text-green-400' : diff < 0 ? 'text-red-400' : 'text-gray-400'}">${diff > 0 ? '+' : ''}${diff}</span>`;
-}
-</script>
-@endpush

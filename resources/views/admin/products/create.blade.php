@@ -127,7 +127,7 @@
                     <h3 class="text-sm font-semibold text-white mb-4 pb-3 border-b border-gray-700">Gambar Produk</h3>
                     <div id="image-upload-area"
                         class="border-2 border-dashed border-gray-600 rounded-xl p-6 text-center cursor-pointer hover:border-blue-500 transition-colors"
-                        onclick="document.getElementById('image').click()">
+                        id="image-upload-area">
                         <img id="image-preview" src="" alt="" class="hidden w-full h-40 object-contain mb-3 rounded-lg">
                         <div id="upload-placeholder">
                             <svg class="w-10 h-10 text-gray-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@
                             <p class="text-sm text-gray-400">Klik untuk upload gambar</p>
                             <p class="text-xs text-gray-600 mt-1">JPG, PNG, WebP — max 2MB</p>
                         </div>
-                        <input type="file" id="image" name="image" accept="image/*" class="hidden" onchange="previewImage(this)">
+                        <input type="file" id="image" name="image" accept="image/*" class="hidden">
                     </div>
                 </div>
 
@@ -169,43 +169,3 @@
 </div>
 @endsection
 
-@push('scripts')
-<script>
-let attrIndex = 0;
-const container = document.getElementById('attributes-container');
-const noAttrText = document.getElementById('no-attr-text');
-
-document.getElementById('add-attribute').addEventListener('click', function() {
-    noAttrText.classList.add('hidden');
-    const row = document.createElement('div');
-    row.className = 'flex gap-2 items-center';
-    row.innerHTML = `
-        <input type="text" name="attributes[${attrIndex}][attribute_name]"
-            placeholder="Nama (misal: Warna)"
-            class="flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
-        <input type="text" name="attributes[${attrIndex}][attribute_value]"
-            placeholder="Nilai (misal: Merah)"
-            class="flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
-        <button type="button" onclick="this.parentElement.remove(); if(container.children.length===0) noAttrText.classList.remove('hidden')"
-            class="p-2 text-red-400 hover:bg-red-900/20 rounded-lg transition-all flex-shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>`;
-    container.appendChild(row);
-    attrIndex++;
-});
-
-function previewImage(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = e => {
-            document.getElementById('image-preview').src = e.target.result;
-            document.getElementById('image-preview').classList.remove('hidden');
-            document.getElementById('upload-placeholder').classList.add('hidden');
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-</script>
-@endpush

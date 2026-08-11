@@ -112,7 +112,7 @@
                         </form>
                         @if(auth()->user()->isAdmin())
                         <form action="{{ route('admin.stocks.cancel', $tx->id) }}" method="POST" class="inline ml-1"
-                              onsubmit="return confirm('Batalkan transaksi ini?')">
+                            data-confirm="Batalkan transaksi ini?">
                             @csrf
                             <button class="px-2.5 py-1 bg-red-900/40 hover:bg-red-700 text-red-400 text-xs rounded-lg transition-all">
                                 Batal

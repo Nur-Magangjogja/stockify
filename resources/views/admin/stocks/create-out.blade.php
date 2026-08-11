@@ -77,27 +77,3 @@
 </div>
 @endsection
 
-@push('scripts')
-<script>
-const select = document.getElementById('product-select');
-const infoBox = document.getElementById('product-info');
-const currentStockEl = document.getElementById('current-stock');
-const unitPriceEl = document.getElementById('unit-price');
-const qtyInput = document.getElementById('quantity-input');
-
-select.addEventListener('change', function() {
-    const opt = this.options[this.selectedIndex];
-    if (this.value) {
-        const stock = parseInt(opt.dataset.stock);
-        currentStockEl.textContent = stock + ' ' + opt.dataset.unit;
-        if (!unitPriceEl.value) unitPriceEl.value = opt.dataset.price;
-        qtyInput.max = stock;
-        infoBox.classList.remove('hidden');
-    } else {
-        infoBox.classList.add('hidden');
-        qtyInput.removeAttribute('max');
-    }
-});
-if (select.value) select.dispatchEvent(new Event('change'));
-</script>
-@endpush
