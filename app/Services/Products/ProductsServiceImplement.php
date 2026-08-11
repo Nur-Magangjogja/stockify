@@ -69,20 +69,39 @@ class ProductsServiceImplement extends Service implements ProductsService{
 
     public function createProduct(array $data, $image = null)
     {
-      return Products::create($this->normalize($data));
+      $normalizedData = $this->normalize($data);
+      
+      if ($image) {
+          $normalizedData['image'] = $image->store('products', 'public');
+      }
+      
+      return Products::create($normalizedData);
     }
 
     public function updateProduct(int $id, array $data, $image = null)
     {
       $product = Products::findOrFail($id);
-      $product->update($this->normalize($data));
+      $normalizedData = $this->normalize($data);
+
+      if ($image) {
+          if ($product->image) {
+              \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+          }
+          $normalizedData['image'] = $image->store('products', 'public');
+      }
+
+      $product->update($normalizedData);
 
       return $product->refresh();
     }
 
     public function deleteProduct(int $id): bool
     {
-      return (bool) Products::findOrFail($id)->delete();
+      $product = Products::findOrFail($id);
+      if ($product->image) {
+          \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+      }
+      return (bool) $product->delete();
     }
 
     private function normalize(array $data): array

@@ -8,7 +8,7 @@
     $lowStockCount = \App\Models\Products::lowStock()->count();
 @endphp
 
-<nav class="sticky top-0 z-30 flex items-center gap-4 border-b border-gray-700 bg-gray-800 px-4 py-3 shadow-sm">
+<nav class="sticky top-0 z-30 flex items-center gap-4 border-b border-white/5 bg-gray-900/70 backdrop-blur-md px-4 py-3 shadow-sm transition-all duration-300">
     <button type="button" data-drawer-target="sidebar" data-drawer-toggle="sidebar"
         class="rounded-lg p-2 text-gray-400 hover:bg-gray-700 hover:text-white sm:hidden" aria-label="Buka menu">
         <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">

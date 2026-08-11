@@ -12,10 +12,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    {{-- Alpine.js --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     @stack('styles')
 </head>
-<body class="bg-gray-900 text-gray-100 antialiased">
+<body class="bg-gradient-to-br from-gray-900 via-[#111827] to-[#0f172a] text-gray-100 antialiased min-h-screen">
 
 {{-- Sidebar --}}
 <x-sidebar />

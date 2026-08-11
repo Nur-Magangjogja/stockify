@@ -2,9 +2,11 @@
 
 @section('title', 'Dashboard Admin')
 @section('page-title', 'Dashboard')
-@section('page-subtitle', 'Ringkasan sistem Stockify')
+@section('page-subtitle', '')
 
 @section('content')
+<x-welcome-banner />
+
 {{-- Stats Cards --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
 
@@ -52,10 +54,10 @@
 
 </div>
 
-<div class="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
     {{-- Chart --}}
-    <div class="xl:col-span-2 bg-gray-800 rounded-xl border border-gray-700 p-5">
-        <div class="flex items-center justify-between mb-4">
+    <div class="xl:col-span-2 bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl">
+        <div class="flex items-center justify-between mb-6">
             <div>
                 <h3 class="text-base font-semibold text-white">Grafik Transaksi</h3>
                 <p class="text-xs text-gray-400">{{ now()->translatedFormat('F Y') }}</p>
@@ -73,8 +75,8 @@
     </div>
 
     {{-- Stok per Kategori --}}
-    <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
-        <h3 class="text-base font-semibold text-white mb-4">Stok per Kategori</h3>
+    <div class="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl">
+        <h3 class="text-base font-semibold text-white mb-6">Stok per Kategori</h3>
         @if(!empty($stats['stock_by_category']))
         <div class="space-y-3">
             @php $maxStock = max(array_column($stats['stock_by_category'], 'total_stock')); @endphp
@@ -97,26 +99,19 @@
     </div>
 </div>
 
-<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
     {{-- Low Stock Alert --}}
-    <div class="bg-gray-800 rounded-xl border border-gray-700">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-700">
+    <div class="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-white/5 bg-gray-900/20">
             <h3 class="font-semibold text-white">⚠️ Stok Menipis</h3>
             <a href="{{ route('admin.products.index', ['stock_status' => 'low']) }}"
                class="text-xs text-blue-400 hover:text-blue-300">Lihat semua</a>
         </div>
-        <div class="divide-y divide-gray-700">
+        <div class="divide-y divide-white/5">
             @forelse($lowStockItems as $product)
-            <div class="flex items-center gap-3 px-5 py-3">
+            <div class="flex items-center gap-4 px-6 py-4 hover:bg-white/[0.02] transition-colors group">
                 <div class="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                    @if($product->image)
-                        <img src="{{ $product->image_url }}" class="w-full h-full object-cover" alt="">
-                    @else
-                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-                        </svg>
-                    @endif
+                    <img src="{{ $product->image ? $product->image_url : 'https://placehold.co/600x400/374151/9ca3af?text=No+Image' }}" class="w-full h-full object-cover" alt="{{ $product->name }}">
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-white truncate">{{ $product->name }}</p>
@@ -136,15 +131,15 @@
     </div>
 
     {{-- Recent Activity --}}
-    <div class="bg-gray-800 rounded-xl border border-gray-700">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-700">
+    <div class="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-white/5 bg-gray-900/20">
             <h3 class="font-semibold text-white">Aktivitas Terbaru</h3>
             <a href="{{ route('admin.reports.activities') }}"
                class="text-xs text-blue-400 hover:text-blue-300">Lihat semua</a>
         </div>
-        <div class="divide-y divide-gray-700">
+        <div class="divide-y divide-white/5">
             @forelse($recentActivities as $activity)
-            <div class="flex items-start gap-3 px-5 py-3">
+            <div class="flex items-start gap-4 px-6 py-4 hover:bg-white/[0.02] transition-colors group">
                 <img src="{{ $activity->user?->avatar_url ?? 'https://ui-avatars.com/api/?name=System&background=374151&color=9ca3af' }}"
                      class="w-7 h-7 rounded-full flex-shrink-0 mt-0.5" alt="">
                 <div class="flex-1 min-w-0">
@@ -160,16 +155,19 @@
 </div>
 
 {{-- User Stats --}}
-<div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
     @foreach([
-        ['label' => 'Total Pengguna', 'value' => $userStats['total_users'],    'color' => 'text-blue-400'],
-        ['label' => 'Admin',          'value' => $userStats['total_admin'],     'color' => 'text-purple-400'],
-        ['label' => 'Manajer',        'value' => $userStats['total_managers'],  'color' => 'text-green-400'],
-        ['label' => 'Staff',          'value' => $userStats['total_staff'],     'color' => 'text-amber-400'],
+        ['label' => 'Total Pengguna', 'value' => $userStats['total_users'],    'bg' => 'bg-blue-500/10', 'text' => 'text-blue-400', 'border' => 'border-blue-500/20'],
+        ['label' => 'Admin',          'value' => $userStats['total_admin'],     'bg' => 'bg-purple-500/10', 'text' => 'text-purple-400', 'border' => 'border-purple-500/20'],
+        ['label' => 'Manajer',        'value' => $userStats['total_managers'],  'bg' => 'bg-green-500/10', 'text' => 'text-green-400', 'border' => 'border-green-500/20'],
+        ['label' => 'Staff',          'value' => $userStats['total_staff'],     'bg' => 'bg-amber-500/10', 'text' => 'text-amber-400', 'border' => 'border-amber-500/20'],
     ] as $stat)
-    <div class="bg-gray-800 rounded-xl border border-gray-700 p-4 text-center">
-        <p class="text-2xl font-bold {{ $stat['color'] }}">{{ $stat['value'] }}</p>
-        <p class="text-xs text-gray-400 mt-1">{{ $stat['label'] }}</p>
+    <div class="bg-gray-800/40 backdrop-blur-md rounded-2xl border {{ $stat['border'] }} p-5 text-center transition-transform hover:-translate-y-1">
+        <div class="w-10 h-10 {{ $stat['bg'] }} {{ $stat['text'] }} rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+        </div>
+        <p class="text-2xl font-bold text-white mb-1">{{ $stat['value'] }}</p>
+        <p class="text-xs text-gray-400 uppercase tracking-wide">{{ $stat['label'] }}</p>
     </div>
     @endforeach
 </div>

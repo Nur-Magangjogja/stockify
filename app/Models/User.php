@@ -75,6 +75,16 @@ class User extends Authenticatable
             };
     }
 
+    /**
+     * Get the user's avatar URL based on their name.
+     */
+    public function getAvatarUrlAttribute()
+    {
+        // Gunakan ui-avatars.com untuk men-generate gambar inisial
+        $name = urlencode($this->name);
+        return "https://ui-avatars.com/api/?name={$name}&background=3b82f6&color=ffffff&bold=true&size=128";
+    }
+
     public function stockTransactions()
     {
         return $this->hasMany(Stock_transaction::class);

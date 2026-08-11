@@ -4,6 +4,8 @@
 @section('page-subtitle', 'Selamat datang, ' . auth()->user()->name)
 
 @section('content')
+<x-welcome-banner />
+
 {{-- Stats Cards --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
 
@@ -50,11 +52,11 @@
 
 </div>
 
-<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
     {{-- Aksi Cepat --}}
-    <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
-        <h3 class="font-semibold text-white mb-4">Aksi Cepat</h3>
-        <div class="grid grid-cols-2 gap-3">
+    <div class="bg-gray-800/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl p-6">
+        <h3 class="font-semibold text-white mb-6">Aksi Cepat</h3>
+        <div class="grid grid-cols-2 gap-4">
             <a href="{{ route('manager.stocks.in.create') }}"
                class="flex items-center gap-3 p-3 bg-green-900/20 border border-green-700/40 rounded-xl hover:bg-green-900/30 transition-all">
                 <div class="w-8 h-8 bg-green-600/30 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -95,15 +97,15 @@
     </div>
 
     {{-- Stok Menipis --}}
-    <div class="bg-gray-800 border border-gray-700 rounded-xl">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-700">
+    <div class="bg-gray-800/60 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-white/5 bg-gray-900/20">
             <h3 class="font-semibold text-white">⚠️ Stok Menipis</h3>
             <a href="{{ route('manager.products.index', ['stock_status' => 'low']) }}"
                class="text-xs text-blue-400 hover:text-blue-300">Lihat semua</a>
         </div>
-        <div class="divide-y divide-gray-700">
+        <div class="divide-y divide-white/5">
             @forelse($lowStockItems as $product)
-            <div class="flex items-center gap-3 px-5 py-3">
+            <div class="flex items-center gap-4 px-6 py-4 hover:bg-white/[0.02] transition-colors group">
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-white truncate">{{ $product->name }}</p>
                     <p class="text-xs text-gray-400">{{ $product->code }}</p>

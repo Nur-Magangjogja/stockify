@@ -16,13 +16,15 @@
 
 @layer components {
 	.sidebar-item-active {
-		background: rgba(37, 99, 235, 0.15);
+		background: linear-gradient(90deg, rgba(37, 99, 235, 0.15) 0%, rgba(79, 70, 229, 0.05) 100%);
 		color: #60a5fa;
-		border-right: 3px solid #2563eb;
+		border-left: 3px solid #3b82f6;
+		box-shadow: inset 20px 0 20px -20px rgba(59, 130, 246, 0.2);
 	}
 
 	.sidebar-item-active svg {
 		color: #60a5fa !important;
+		filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.4));
 	}
 
 	.stock-badge-in {
@@ -58,29 +60,32 @@
 	}
 
 	.input-field {
-		background: rgba(17, 24, 39, 0.8);
-		border: 1px solid rgba(75, 85, 99, 0.6);
+		background: rgba(17, 24, 39, 0.6);
+		backdrop-filter: blur(8px);
+		border: 1px solid rgba(75, 85, 99, 0.4);
 		color: #f3f4f6;
-		transition: all 0.2s;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
 	.input-field:focus {
-		border-color: #2563eb;
-		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+		border-color: rgba(59, 130, 246, 0.8);
+		background: rgba(17, 24, 39, 0.9);
+		box-shadow: 0 0 15px rgba(59, 130, 246, 0.2), inset 0 0 0 1px rgba(59, 130, 246, 0.8);
 		outline: none;
 	}
 
-	.input-field::placeholder { color: #6b7280; }
+	.input-field::placeholder { color: #9ca3af; }
 
 	.btn-primary {
-		background: linear-gradient(135deg, #2563eb, #4f46e5);
-		transition: all 0.2s;
+		background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
 	}
 
 	.btn-primary:hover {
-		background: linear-gradient(135deg, #1d4ed8, #4338ca);
-		transform: translateY(-1px);
-		box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+		background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+		transform: translateY(-2px);
+		box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
 	}
 }
 

@@ -123,22 +123,22 @@
                 </div>
 
                 {{-- Gambar --}}
-                <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
+                <div class="bg-gray-800 border border-gray-700 rounded-xl p-5" x-data="{ imageUrl: 'https://placehold.co/600x400/374151/9ca3af?text=No+Image' }">
                     <h3 class="text-sm font-semibold text-white mb-4 pb-3 border-b border-gray-700">Gambar Produk</h3>
-                    <div id="image-upload-area"
-                        class="border-2 border-dashed border-gray-600 rounded-xl p-6 text-center cursor-pointer hover:border-blue-500 transition-colors"
+                    <label for="image"
+                        class="border-2 border-dashed border-gray-600 rounded-xl p-6 text-center cursor-pointer hover:border-blue-500 transition-colors block"
                         id="image-upload-area">
-                        <img id="image-preview" src="" alt="" class="hidden w-full h-40 object-contain mb-3 rounded-lg">
-                        <div id="upload-placeholder">
+                        <img :src="imageUrl" alt="" class="w-full h-40 object-contain mb-3 rounded-lg">
+                        <div id="upload-placeholder" class="hidden">
                             <svg class="w-10 h-10 text-gray-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                             <p class="text-sm text-gray-400">Klik untuk upload gambar</p>
-                            <p class="text-xs text-gray-600 mt-1">JPG, PNG, WebP — max 2MB</p>
+                            <p class="text-xs text-gray-600 mt-1">JPG, PNG — max 2MB</p>
                         </div>
-                        <input type="file" id="image" name="image" accept="image/*" class="hidden">
-                    </div>
+                        <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/jpg" class="hidden" @change="imageUrl = URL.createObjectURL($event.target.files[0])" required>
+                    </label>
                 </div>
 
                 {{-- Status --}}

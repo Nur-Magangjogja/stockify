@@ -34,7 +34,12 @@ class Products extends Model
     public function getMinStockAttribute() { return $this->minimum_stock; }
     public function getStockAttribute() { return $this->stockTransactions->where('status', Stock_transaction::STATUS_DITERIMA)->sum(fn ($transaction) => $transaction->type === Stock_transaction::TYPE_MASUK ? $transaction->quantity : -$transaction->quantity); }
     public function getIsLowStockAttribute() { return $this->stock <= $this->minimum_stock; }
-    public function getImageUrlAttribute() { return $this->image ? Storage::url($this->image) : null; }
+    public function getImageUrlAttribute() { 
+        if (!$this->image || $this->image === 'noimage.png') {
+            return 'https://placehold.co/600x400/374151/9ca3af?text=No+Image';
+        }
+        return Storage::url($this->image);
+    }
     public function getUnitAttribute() { return 'pcs'; }
     public function getIsActiveAttribute() { return true; }
     public function getStockStatusLabelAttribute() { return $this->stock <= 0 ? 'Habis' : ($this->stock <= $this->minimum_stock ? 'Menipis' : 'Aman'); }
