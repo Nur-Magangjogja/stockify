@@ -105,28 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		reader.readAsDataURL(file);
 	});
 
-	const productSelect = document.getElementById('product-select');
-	if (productSelect) {
-		const infoBox = document.getElementById('product-info');
-		const currentStock = document.getElementById('current-stock');
-		const unitPrice = document.getElementById('unit-price');
-		const quantity = document.getElementById('quantity-input');
-		const updateProductInfo = () => {
-			const option = productSelect.options[productSelect.selectedIndex];
-			if (!productSelect.value) {
-				infoBox?.classList.add('hidden');
-				quantity?.removeAttribute('max');
-				return;
-			}
-			const stock = Number.parseInt(option.dataset.stock || '0', 10);
-			currentStock.textContent = `${stock} ${option.dataset.unit || ''}`;
-			if (unitPrice && !unitPrice.value) unitPrice.value = option.dataset.price || '';
-			if (quantity) quantity.max = stock;
-			infoBox?.classList.remove('hidden');
-		};
-		productSelect.addEventListener('change', updateProductInfo);
-		if (productSelect.value) updateProductInfo();
-	}
 
 	document.querySelectorAll('[data-system]').forEach((input) => {
 		const updateDifference = () => {
