@@ -41,5 +41,14 @@ class UserServiceImplement extends Service implements UserService{
     public function createUser(array $data) { return User::create($data); }
     public function updateUser(int $id, array $data) { $user = User::findOrFail($id); $user->update($data); return $user->refresh(); }
     public function deleteUser(int $id): bool { return (bool) User::findOrFail($id)->delete(); }
-    public function toggleStatus(int $id): bool { return true; }
+    public function toggleStatus(int $id): bool {
+        $user = User::findOrFail($id);
+        if ($user->email_verified_at) {
+            $user->email_verified_at = null;
+        } else {
+            $user->email_verified_at = now();
+        }
+        $user->save();
+        return !is_null($user->email_verified_at);
+    }
 }
