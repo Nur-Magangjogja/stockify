@@ -80,6 +80,6 @@
 </div>
 
 @if($suppliers->hasPages())
-<div class="mt-4">{{ $suppliers->links() }}</div>
+        <div class="mt-4">{{ $suppliers->appends(request()->query())->links('components.pagination') }}</div>
 @endif
 @endsection

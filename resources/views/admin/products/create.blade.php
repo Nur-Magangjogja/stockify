@@ -4,8 +4,9 @@
 @section('page-subtitle', 'Lengkapi data produk di bawah ini')
 
 @section('content')
+@php $prefix = auth()->user()->isAdmin() ? 'admin' : 'manager'; @endphp
 <div class="max-w-4xl">
-    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" id="product-form">
+    <form action="{{ route("{$prefix}.products.store") }}" method="POST" enctype="multipart/form-data" id="product-form">
         @csrf
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
@@ -204,9 +205,8 @@
                     </label>
                 </div>
 
-                {{-- Actions --}}
                 <div class="flex gap-3">
-                    <a href="{{ route('admin.products.index') }}"
+                    <a href="{{ route("{$prefix}.products.index") }}"
                        class="flex-1 py-2.5 text-center bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-all">
                         Batal
                     </a>

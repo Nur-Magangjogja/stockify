@@ -23,16 +23,10 @@
                 <label class="block text-sm font-medium text-gray-300 mb-1.5">Role <span class="text-red-400">*</span></label>
                 <select name="role" required class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">-- Pilih Role --</option>
-                    <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
-                    <option value="warehouse_manager" {{ old('role') === 'warehouse_manager' ? 'selected' : '' }}>Manajer Gudang</option>
-                    <option value="warehouse_staff" {{ old('role') === 'warehouse_staff' ? 'selected' : '' }}>Staff Gudang</option>
+                    <option value="Admin" {{ old('role') === 'Admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="Manajer Gudang" {{ old('role') === 'Manajer Gudang' ? 'selected' : '' }}>Manajer Gudang</option>
+                    <option value="Staff Gudang" {{ old('role') === 'Staff Gudang' ? 'selected' : '' }}>Staff Gudang</option>
                 </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1.5">Telepon</label>
-                <input type="text" name="phone" value="{{ old('phone') }}"
-                    class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="08xxxxxxxxxx">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-300 mb-1.5">Password <span class="text-red-400">*</span></label>

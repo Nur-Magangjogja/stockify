@@ -59,7 +59,7 @@ class ProductsServiceImplement extends Service implements ProductsService{
 
     public function getLowStockProducts(int $limit = 8)
     {
-      return Products::with('stockTransactions')->orderBy('minimum_stock', 'desc')->limit($limit)->get();
+      return Products::with('stockTransactions')->lowStock()->orderBy('minimum_stock', 'desc')->limit($limit)->get();
     }
 
     public function getProduct(int $id)
@@ -75,7 +75,20 @@ class ProductsServiceImplement extends Service implements ProductsService{
           $normalizedData['image'] = $image->store('products', 'public');
       }
       
-      return Products::create($normalizedData);
+      $product = Products::create($normalizedData);
+
+      if (isset($data['attributes']) && is_array($data['attributes'])) {
+          foreach ($data['attributes'] as $attr) {
+              if (!empty($attr['attribute_name']) && !empty($attr['attribute_value'])) {
+                  $product->attributes()->create([
+                      'name' => $attr['attribute_name'],
+                      'value' => $attr['attribute_value'],
+                  ]);
+              }
+          }
+      }
+
+      return $product;
     }
 
     public function updateProduct(int $id, array $data, $image = null)
@@ -91,6 +104,20 @@ class ProductsServiceImplement extends Service implements ProductsService{
       }
 
       $product->update($normalizedData);
+
+      if (isset($data['attributes']) && is_array($data['attributes'])) {
+          $product->attributes()->delete();
+          foreach ($data['attributes'] as $attr) {
+              if (!empty($attr['attribute_name']) && !empty($attr['attribute_value'])) {
+                  $product->attributes()->create([
+                      'name' => $attr['attribute_name'],
+                      'value' => $attr['attribute_value'],
+                  ]);
+              }
+          }
+      } elseif (isset($data['attributes'])) {
+          $product->attributes()->delete();
+      }
 
       return $product->refresh();
     }

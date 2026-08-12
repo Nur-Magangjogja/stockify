@@ -17,7 +17,8 @@ class StockController extends Controller
     public function __construct(
         protected StockTransactionService $transactionService,
         protected ProductsService $productService,
-        protected SuppilersService $supplierService
+        protected SuppilersService $supplierService,
+        protected \App\Services\ActivityLog\ActivityLogService $activityLogService
     ) {}
 
     public function index(Request $request)
@@ -131,6 +132,12 @@ class StockController extends Controller
                     'notes' => $validated['notes'] ?: 'Penyesuaian stock opname',
                 ]);
             }
+            
+            $notesLog = !empty($validated['notes']) ? ' - Catatan: ' . $validated['notes'] : '';
+            $this->activityLogService->log(
+                action: 'STOCK_OPNAME',
+                description: 'Stock Opname tanggal ' . $validated['opname_date'] . $notesLog
+            );
         });
 
         return redirect()->route('admin.stocks.opname.index')

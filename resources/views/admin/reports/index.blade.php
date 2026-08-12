@@ -32,8 +32,7 @@
         <span class="mt-4 inline-flex items-center text-xs text-green-400 font-medium">Buka Laporan →</span>
     </a>
 
-    @if(auth()->user()->isAdmin())
-    <a href="{{ route('admin.reports.activities') }}"
+    <a href="{{ route("{$prefix}.reports.activities") }}"
        class="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-purple-600 hover:bg-purple-900/10 transition-all group">
         <div class="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-purple-600/30 transition-all">
             <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,6 +44,5 @@
         <p class="text-sm text-gray-400">Audit log semua aktivitas pengguna dalam sistem.</p>
         <span class="mt-4 inline-flex items-center text-xs text-purple-400 font-medium">Buka Laporan →</span>
     </a>
-    @endif
 </div>
 @endsection

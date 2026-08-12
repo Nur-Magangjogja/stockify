@@ -11,9 +11,9 @@
             class="bg-gray-800 border border-gray-700 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 w-52">
         <select name="role" class="bg-gray-800 border border-gray-700 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
             <option value="">Semua Role</option>
-            <option value="admin" {{ ($filters['role'] ?? '') === 'admin' ? 'selected' : '' }}>Admin</option>
-            <option value="warehouse_manager" {{ ($filters['role'] ?? '') === 'warehouse_manager' ? 'selected' : '' }}>Manajer Gudang</option>
-            <option value="warehouse_staff" {{ ($filters['role'] ?? '') === 'warehouse_staff' ? 'selected' : '' }}>Staff Gudang</option>
+            <option value="Admin" {{ ($filters['role'] ?? '') === 'Admin' ? 'selected' : '' }}>Admin</option>
+            <option value="Manajer Gudang" {{ ($filters['role'] ?? '') === 'Manajer Gudang' ? 'selected' : '' }}>Manajer Gudang</option>
+            <option value="Staff Gudang" {{ ($filters['role'] ?? '') === 'Staff Gudang' ? 'selected' : '' }}>Staff Gudang</option>
         </select>
         <button type="submit" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-all">Filter</button>
     </form>
@@ -32,7 +32,6 @@
             <tr>
                 <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">Pengguna</th>
                 <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">Role</th>
-                <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide hidden md:table-cell">Telepon</th>
                 <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">Status</th>
                 <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right">Aksi</th>
             </tr>
@@ -52,13 +51,10 @@
                 </td>
                 <td class="px-4 py-4">
                     <span class="px-2.5 py-1 text-xs font-medium rounded-full
-                        {{ $user->role === 'admin' ? 'bg-purple-900/40 text-purple-400' :
-                           ($user->role === 'warehouse_manager' ? 'bg-blue-900/40 text-blue-400' : 'bg-gray-700 text-gray-300') }}">
+                        {{ $user->role === 'Admin' ? 'bg-purple-900/40 text-purple-400' :
+                           ($user->role === 'Manajer Gudang' ? 'bg-blue-900/40 text-blue-400' : 'bg-gray-700 text-gray-300') }}">
                         {{ $user->role_label }}
                     </span>
-                </td>
-                <td class="px-4 py-4 hidden md:table-cell">
-                    <span class="text-gray-400 text-sm">{{ $user->phone ?? '-' }}</span>
                 </td>
                 <td class="px-4 py-4">
                     <span class="px-2.5 py-1 text-xs font-medium rounded-full {{ $user->is_active ? 'bg-green-900/40 text-green-400' : 'bg-red-900/40 text-red-400' }}">

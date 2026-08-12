@@ -130,11 +130,12 @@ class StockTransactionServiceImplement implements StockTransactionService
             // Update transaction status
             $this->repository->updateStatus($id, Stock_transaction::STATUS_CONFIRMED);
 
+            $jenis = $transaction->type === Stock_transaction::TYPE_IN ? 'Barang Masuk' : 'Barang Keluar';
             $this->activityLogService->log(
                 'confirm_transaction',
                 'StockTransaction',
                 $id,
-                "Transaksi dikonfirmasi: #{$transaction->id}"
+                "Konfirmasi {$jenis}: {$transaction->product->name} sebanyak {$transaction->quantity} " . ($transaction->product->unit ?? 'pcs')
             );
 
             return $transaction->fresh(['product', 'user']);
@@ -155,11 +156,12 @@ class StockTransactionServiceImplement implements StockTransactionService
             throw new \Exception('Transaksi yang sudah dikonfirmasi tidak dapat dibatalkan.');
         }
 
+        $jenis = $transaction->type === Stock_transaction::TYPE_IN ? 'Barang Masuk' : 'Barang Keluar';
         $this->activityLogService->log(
             'cancel_transaction',
             'StockTransaction',
             $id,
-            "Transaksi dibatalkan: #{$transaction->id}"
+            "Tolak/Batal {$jenis}: {$transaction->product->name} sebanyak {$transaction->quantity} " . ($transaction->product->unit ?? 'pcs')
         );
 
         return $this->repository->updateStatus($id, Stock_transaction::STATUS_CANCELLED);

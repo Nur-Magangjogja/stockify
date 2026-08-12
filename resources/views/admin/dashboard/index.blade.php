@@ -12,7 +12,7 @@
 
     <x-stat-card color="blue" label="Total Produk"
         :value="number_format($stats['total_products'])"
-        :sub="$stats['low_stock_count'] . ' stok menipis'">
+        :sub="$stats['low_stock_count'] . ' produk yang ada saat ini'">
         <x-slot:icon>
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -21,8 +21,23 @@
         </x-slot:icon>
     </x-stat-card>
 
+    @php
+        $val = $stats['total_stock_value'];
+        if ($val >= 1000000000000) {
+            $fmt = number_format($val / 1000000000000, 1, ',', '') . ' T';
+        } elseif ($val >= 1000000000) {
+            $fmt = number_format($val / 1000000000, 1, ',', '') . ' M';
+        } elseif ($val >= 1000000) {
+            $fmt = number_format($val / 1000000, 1, ',', '') . ' Jt';
+        } elseif ($val >= 1000) {
+            $fmt = number_format($val / 1000, 1, ',', '') . ' Rb';
+        } else {
+            $fmt = number_format($val, 0, ',', '.');
+        }
+        $fmt = str_replace(',0 ', ' ', $fmt); // Hapus angka desimal jika bulat (misal 1,0 Jt jadi 1 Jt)
+    @endphp
     <x-stat-card color="green" label="Nilai Stok"
-        :value="'Rp ' . number_format($stats['total_stock_value'], 0, ',', '.')"
+        :value="'Rp ' . $fmt"
         sub="Total nilai inventaris">
         <x-slot:icon>
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
@@ -71,12 +86,19 @@
                 </span>
             </div>
         </div>
-        <canvas id="transactionChart" height="100"></canvas>
+        <canvas id="transactionChart" height="100" 
+                data-labels="{{ json_encode($stats['transaction_chart']['labels']) }}"
+                data-masuk="{{ json_encode($stats['transaction_chart']['masuk']) }}"
+                data-keluar="{{ json_encode($stats['transaction_chart']['keluar']) }}">
+        </canvas>
     </div>
 
     {{-- Stok per Kategori --}}
     <div class="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl">
-        <h3 class="text-base font-semibold text-white mb-6">Stok per Kategori</h3>
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-base font-semibold text-white">Stok per Kategori</h3>
+            <a href="{{ route('admin.categories.index') }}" class="text-xs text-blue-400 hover:text-blue-300">Lihat semua</a>
+        </div>
         @if(!empty($stats['stock_by_category']))
         <div class="space-y-3">
             @php $maxStock = max(array_column($stats['stock_by_category'], 'total_stock')); @endphp

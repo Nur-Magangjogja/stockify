@@ -50,7 +50,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Supplier</label>
-                    <select name="supplier_id" id="supplier-select" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+                    <select name="supplier_id" id="supplier-select" disabled class="w-full bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg px-3 py-2.5 cursor-not-allowed pointer-events-none">
                         <option value="">-- Tanpa Supplier --</option>
                         @foreach($suppliers as $supplier)
                         <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option>
@@ -59,16 +59,16 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Tanggal Transaksi <span class="text-red-400">*</span></label>
-                    <input type="date" name="date" value="{{ old('date', date('Y-m-d')) }}" required
-                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+                    <input type="date" name="date" value="{{ old('date', date('Y-m-d')) }}" required readonly
+                        class="w-full bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg px-3 py-2.5 cursor-not-allowed pointer-events-none">
                 </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-300 mb-1.5">No. Referensi</label>
-                <input type="text" name="reference_number" id="reference-input" value="{{ old('reference_number') }}"
-                    class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Nomor PO/nota (opsional, auto-generate jika kosong)">
+                <input type="text" name="reference_number" id="reference-input" value="{{ old('reference_number') }}" readonly
+                    class="w-full bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg px-3 py-2.5 cursor-not-allowed pointer-events-none"
+                    placeholder="Auto-generate sesuai SKU">
             </div>
 
             <div>
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 supplierSelect.value = supplierId;
             }
             const refInput = document.getElementById('reference-input');
-            if(refInput && sku && !refInput.value) {
+            if(refInput && sku) {
                 refInput.value = sku;
             }
         } else {

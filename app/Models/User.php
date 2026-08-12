@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'email_verified_at',
     ];
 
     /**
@@ -98,7 +99,12 @@ class User extends Authenticatable
     //Scopes
     public function scopeActive($query)
     {
-        return $query;
+        return $query->whereNotNull('email_verified_at');
+    }
+
+    public function getIsActiveAttribute()
+    {
+        return !is_null($this->email_verified_at);
     }
 
     public function scopeByRole($query, string $role)

@@ -30,7 +30,15 @@ class UserController extends Controller
             'email'                 => 'required|email|unique:users,email',
             'password'              => 'required|min:8|confirmed',
             'role'                  => 'required|in:Admin,Manajer Gudang,Staff Gudang',
+            'is_active'             => 'boolean',
         ]);
+
+        if ($request->boolean('is_active')) {
+            $validated['email_verified_at'] = now();
+        } else {
+            $validated['email_verified_at'] = null;
+        }
+        unset($validated['is_active']);
 
         try {
             $user = $this->userService->createUser($validated);
@@ -54,7 +62,19 @@ class UserController extends Controller
             'email'    => "required|email|unique:users,email,{$id}",
             'password' => 'nullable|min:8|confirmed',
             'role'     => 'required|in:Admin,Manajer Gudang,Staff Gudang',
+            'is_active'=> 'boolean',
         ]);
+
+        if (empty($validated['password'])) {
+            unset($validated['password']);
+        }
+
+        if ($request->boolean('is_active')) {
+            $validated['email_verified_at'] = now();
+        } else {
+            $validated['email_verified_at'] = null;
+        }
+        unset($validated['is_active']);
 
         try {
             $user = $this->userService->updateUser($id, $validated);

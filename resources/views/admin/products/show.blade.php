@@ -4,6 +4,7 @@
 @section('page-subtitle', 'Kode: ' . $product->code)
 
 @section('content')
+@php $prefix = auth()->user()->isAdmin() ? 'admin' : 'manager'; @endphp
 <div class="max-w-5xl">
     <div class="flex items-center gap-3 mb-5">
         <a href="{{ url()->previous() }}" class="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-all">
@@ -11,15 +12,13 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
             </svg>
         </a>
-        @if(auth()->user()->isAdmin())
-        <a href="{{ route('admin.products.edit', $product->id) }}"
+        <a href="{{ route("{$prefix}.products.edit", $product->id) }}"
            class="ml-auto flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
             </svg>
             Edit Produk
         </a>
-        @endif
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -108,8 +107,8 @@
                 <div class="flex flex-wrap gap-2">
                     @foreach($product->attributes as $attr)
                     <div class="bg-gray-700 rounded-lg px-3 py-2 text-sm">
-                        <span class="text-gray-400">{{ $attr->attribute_name }}:</span>
-                        <span class="text-white font-medium ml-1">{{ $attr->attribute_value }}</span>
+                        <span class="text-gray-400">{{ $attr->name }}:</span>
+                        <span class="text-white font-medium ml-1">{{ $attr->value }}</span>
                     </div>
                     @endforeach
                 </div>

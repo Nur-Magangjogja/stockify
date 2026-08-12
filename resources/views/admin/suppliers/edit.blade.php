@@ -23,33 +23,12 @@
                     <input type="text" name="phone" value="{{ old('phone', $supplier->phone) }}"
                         class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1.5">Nama Kontak</label>
-                    <input type="text" name="contact_person" value="{{ old('contact_person', $supplier->contact_person) }}"
-                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1.5">Kota</label>
-                    <input type="text" name="city" value="{{ old('city', $supplier->city) }}"
-                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
-                </div>
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Alamat</label>
                     <textarea name="address" rows="2"
                         class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">{{ old('address', $supplier->address) }}</textarea>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1.5">Website</label>
-                    <input type="url" name="website" value="{{ old('website', $supplier->website) }}"
-                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
-                </div>
                 <div class="flex items-end pb-1">
-                    <label class="flex items-center gap-3 cursor-pointer">
-                        <input type="hidden" name="is_active" value="0">
-                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', $supplier->is_active) ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 rounded border-gray-600 bg-gray-700">
-                        <span class="text-sm text-gray-300">Supplier Aktif</span>
-                    </label>
                 </div>
             </div>
             <div class="flex gap-3 pt-2">

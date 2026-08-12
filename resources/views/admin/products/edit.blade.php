@@ -4,8 +4,9 @@
 @section('page-subtitle', $product->name)
 
 @section('content')
+@php $prefix = auth()->user()->isAdmin() ? 'admin' : 'manager'; @endphp
 <div class="max-w-4xl">
-    <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route("{$prefix}.products.update", $product->id) }}" method="POST" enctype="multipart/form-data">
         @csrf @method('PUT')
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="lg:col-span-2 space-y-4">
@@ -135,19 +136,20 @@
                     </div>
                     <div id="attributes-container" data-index="{{ $product->attributes->count() }}" class="space-y-3">
                         @foreach($product->attributes as $i => $attr)
-                        <div class="flex gap-2 items-center">
+                        <div class="attribute-row flex flex-col sm:flex-row gap-2 sm:items-center bg-gray-900/30 sm:bg-transparent p-3 sm:p-0 rounded-lg border border-gray-700 sm:border-transparent mb-2 sm:mb-0">
                             <input type="hidden" name="attributes[{{ $i }}][id]" value="{{ $attr->id }}">
-                            <input type="text" name="attributes[{{ $i }}][attribute_name]" value="{{ $attr->attribute_name }}"
-                                placeholder="Nama"
-                                class="flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
-                            <input type="text" name="attributes[{{ $i }}][attribute_value]" value="{{ $attr->attribute_value }}"
-                                placeholder="Nilai"
-                                class="flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
+                            <input type="text" name="attributes[{{ $i }}][attribute_name]" value="{{ $attr->name }}"
+                                placeholder="Nama Atribut" required
+                                class="w-full sm:flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
+                            <input type="text" name="attributes[{{ $i }}][attribute_value]" value="{{ $attr->value }}"
+                                placeholder="Nilai Atribut" required
+                                class="w-full sm:flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
                             <button type="button" data-remove-attribute
-                                class="p-2 text-red-400 hover:bg-red-900/20 rounded-lg transition-all flex-shrink-0">
+                                class="w-full sm:w-auto p-2 text-red-400 hover:bg-red-900/20 rounded-lg transition-all flex justify-center items-center gap-1 border border-red-500/20 sm:border-transparent bg-red-500/10 sm:bg-transparent flex-shrink-0 mt-1 sm:mt-0">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
+                                <span class="text-xs font-medium sm:hidden">Hapus</span>
                             </button>
                         </div>
                         @endforeach
@@ -213,7 +215,7 @@
                 </div>
 
                 <div class="flex gap-3">
-                    <a href="{{ route('admin.products.index') }}"
+                    <a href="{{ route("{$prefix}.products.index") }}"
                        class="flex-1 py-2.5 text-center bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-all">Batal</a>
                     <button type="submit"
                         class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all">Update</button>

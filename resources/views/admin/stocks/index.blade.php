@@ -4,8 +4,18 @@
 @section('page-subtitle', 'Barang masuk dan keluar')
 
 @section('content')
+@php 
+    $role = auth()->user()->role;
+    $prefix = match($role) {
+        'Admin' => 'admin',
+        'Manajer Gudang' => 'manager',
+        default => 'staff',
+    };
+    $isStaff = $role === 'Staff Gudang';
+@endphp
+
+@if(!$isStaff)
 <div class="flex flex-wrap gap-3 mb-5">
-    @php $prefix = auth()->user()->isAdmin() ? 'admin' : 'manager'; @endphp
     <a href="{{ route("{$prefix}.stocks.in.create") }}"
        class="flex items-center gap-2 px-4 py-2.5 bg-green-700 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-all">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -25,6 +35,7 @@
         Stock Opname
     </a>
 </div>
+@endif
 
 {{-- Filter --}}
 <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-5">
@@ -66,7 +77,9 @@
                     <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase hidden lg:table-cell">Stok</th>
                     <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Status</th>
                     <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase hidden md:table-cell">Tanggal</th>
+                    @if(!$isStaff)
                     <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase text-right">Aksi</th>
+                    @endif
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-700">
@@ -102,6 +115,7 @@
                     <td class="px-4 py-3.5 hidden md:table-cell text-sm text-gray-400">
                         {{ $tx->transaction_date->format('d M Y') }}
                     </td>
+                    @if(!$isStaff)
                     <td class="px-4 py-3.5 text-right">
                         @if($tx->status === 'Pending')
                         <form action="{{ route("{$prefix}.stocks.confirm", $tx->id) }}" method="POST" class="inline">
@@ -121,9 +135,10 @@
                         @endif
                         @endif
                     </td>
+                    @endif
                 </tr>
                 @empty
-                <x-table-empty :colspan="8" message="Tidak ada transaksi ditemukan" />
+                <x-table-empty :colspan="$isStaff ? 7 : 8" message="Tidak ada transaksi ditemukan" />
                 @endforelse
             </tbody>
         </table>

@@ -24,7 +24,16 @@
             <input type="date" name="date_to" value="{{ $filters['date_to'] ?? '' }}"
                 class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2">
         </div>
-        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg">Filter</button>
+        <div class="flex gap-2">
+            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg">Filter</button>
+            <a href="{{ request()->fullUrlWithQuery(['export' => 'excel']) }}" target="_blank"
+               class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Export Excel
+            </a>
+        </div>
     </form>
 </div>
 
@@ -35,7 +44,7 @@
                 <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase">Pengguna</th>
                 <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Aksi</th>
                 <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Deskripsi</th>
-                <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">IP</th>
+                <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Peran</th>
                 <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Waktu</th>
             </tr>
         </thead>
@@ -52,8 +61,8 @@
                 <td class="px-4 py-3.5">
                     <span class="font-mono text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded">{{ $log->action }}</span>
                 </td>
-                <td class="px-4 py-3.5 text-gray-400 text-sm max-w-xs truncate">{{ $log->description }}</td>
-                <td class="px-4 py-3.5 font-mono text-xs text-gray-500">{{ $log->ip_address ?? '-' }}</td>
+                <td class="px-4 py-3.5 text-gray-400 text-sm max-w-md whitespace-pre-wrap">{{ $log->description }}</td>
+                <td class="px-4 py-3.5 text-xs text-gray-300">{{ $log->user?->role ?? 'Sistem' }}</td>
                 <td class="px-4 py-3.5 text-gray-400 text-xs">{{ $log->created_at->format('d M Y H:i') }}</td>
             </tr>
             @empty

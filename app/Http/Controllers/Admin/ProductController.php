@@ -75,7 +75,8 @@ class ProductController extends Controller
                 ]);
             }
 
-            return redirect()->route('admin.products.show', $product->id)
+            $prefix = auth()->user()->isAdmin() ? 'admin' : 'manager';
+            return redirect()->route("{$prefix}.products.show", $product->id)
                 ->with('success', "Produk <strong>{$product->name}</strong> berhasil ditambahkan.");
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Gagal menambahkan produk: ' . $e->getMessage());
@@ -126,7 +127,8 @@ class ProductController extends Controller
                 $request->file('image')
             );
 
-            return redirect()->route('admin.products.show', $product->id)
+            $prefix = auth()->user()->isAdmin() ? 'admin' : 'manager';
+            return redirect()->route("{$prefix}.products.show", $product->id)
                 ->with('success', "Produk <strong>{$product->name}</strong> berhasil diperbarui.");
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Gagal memperbarui produk: ' . $e->getMessage());
@@ -135,9 +137,10 @@ class ProductController extends Controller
 
     public function destroy(int $id)
     {
+        $prefix = auth()->user()->isAdmin() ? 'admin' : 'manager';
         try {
             $this->productService->deleteProduct($id);
-            return redirect()->route('admin.products.index')
+            return redirect()->route("{$prefix}.products.index")
                 ->with('success', 'Produk berhasil dihapus.');
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == "23000") {
@@ -146,6 +149,20 @@ class ProductController extends Controller
             return back()->with('error', 'Terjadi kesalahan database: ' . $e->getMessage());
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:10240'
+        ]);
+
+        try {
+            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\ProductsImport, $request->file('file'));
+            return back()->with('success', 'Produk berhasil diimport!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal import produk: ' . $e->getMessage());
         }
     }
 }

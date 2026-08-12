@@ -39,9 +39,12 @@
                 class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2">
         </div>
         <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg">Tampilkan</button>
-        <a href="?{{ http_build_query(array_merge($filters ?? [], ['export' => 'pdf'])) }}"
-           class="px-4 py-2 bg-red-700 hover:bg-red-600 text-white text-sm rounded-lg flex items-center gap-1.5">
-            Export PDF
+        <a href="{{ request()->fullUrlWithQuery(['export' => 'excel']) }}" target="_blank"
+           class="flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Export Excel
         </a>
     </form>
 </div>

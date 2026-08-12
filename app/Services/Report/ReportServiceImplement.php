@@ -120,9 +120,9 @@ class ReportServiceImplement implements ReportService
      * @param array $filters
      * @return mixed
      */
-    public function getActivityReport(array $filters = [])
+    public function getActivityReport(array $filters = [], int $perPage = 20)
     {
-        return $this->activityLogService->getActivitiesPaginated($filters);
+        return $this->activityLogService->getActivitiesPaginated($filters, $perPage);
     }
 
     /**
@@ -132,9 +132,37 @@ class ReportServiceImplement implements ReportService
      */
     public function getDashboardSummary(): array
     {
+        $daysInMonth = now()->daysInMonth;
+        $chartData = [
+            'labels' => range(1, $daysInMonth),
+            'masuk'  => array_fill(0, $daysInMonth, 0),
+            'keluar' => array_fill(0, $daysInMonth, 0),
+        ];
+
+        $transactions = DB::table('stock_transactions')
+            ->selectRaw('DAY(date) as day, type, SUM(quantity) as total')
+            ->where('status', 'Diterima')
+            ->whereMonth('date', now()->month)
+            ->whereYear('date', now()->year)
+            ->groupBy('day', 'type')
+            ->get();
+
+        foreach ($transactions as $t) {
+            if ($t->type === 'Masuk') {
+                $chartData['masuk'][$t->day - 1] = (int) $t->total;
+            } else {
+                $chartData['keluar'][$t->day - 1] = (int) $t->total;
+            }
+        }
+
+        $stockExpression = "COALESCE((SELECT SUM(CASE WHEN status = 'Diterima' AND type = 'Masuk' THEN quantity WHEN status = 'Diterima' AND type = 'Keluar' THEN -quantity ELSE 0 END) FROM stock_transactions WHERE stock_transactions.product_id = products.id), 0)";
+        $totalStockValue = DB::table('products')
+            ->selectRaw("SUM({$stockExpression} * purchase_price) as total_value")
+            ->value('total_value') ?? 0;
+
         return [
             'total_products'    => \DB::table('products')->count(),
-            'total_stock_value' => \DB::table('products')->sum('purchase_price'),
+            'total_stock_value' => $totalStockValue,
             'low_stock_count'   => \DB::table('products')->where('minimum_stock', '>', 0)->count(),
             'out_of_stock'      => 0,
             'today_in'          => \DB::table('stock_transactions')->where('status', 'Diterima')->whereDate('date', today())->where('type', 'Masuk')->count(),
@@ -142,6 +170,7 @@ class ReportServiceImplement implements ReportService
             'month_in_qty'      => \DB::table('stock_transactions')->where('status', 'Diterima')->where('type', 'Masuk')->whereMonth('date', now()->month)->whereYear('date', now()->year)->sum('quantity'),
             'month_out_qty'     => \DB::table('stock_transactions')->where('status', 'Diterima')->where('type', 'Keluar')->whereMonth('date', now()->month)->whereYear('date', now()->year)->sum('quantity'),
             'stock_by_category' => $this->getStockByCategory(),
+            'transaction_chart' => $chartData,
         ];
     }
 
@@ -157,6 +186,7 @@ class ReportServiceImplement implements ReportService
             ->select('categories.name', DB::raw('COUNT(products.id) as total_stock'))
             ->groupBy('categories.id', 'categories.name')
             ->orderBy('total_stock', 'desc')
+            ->limit(7)
             ->get()
             ->toArray();
     }

@@ -43,7 +43,7 @@ class CategoriesServiceImplement extends Service implements CategoriesService{
 
     public function getAllCategoriesPaginated(int $perPage = 15)
     {
-        return Categories::orderBy('name')->paginate($perPage);
+        return Categories::with('products')->orderBy('name')->paginate($perPage);
     }
 
     public function getCategory(int $id)

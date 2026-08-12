@@ -26,7 +26,7 @@ interface ReportService
      * @param array $filters
      * @return mixed
      */
-    public function getActivityReport(array $filters = []);
+    public function getActivityReport(array $filters = [], int $perPage = 20);
 
     /**
      * Get dashboard summary data.

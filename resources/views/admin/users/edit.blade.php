@@ -20,15 +20,11 @@
             <div>
                 <label class="block text-sm font-medium text-gray-300 mb-1.5">Role <span class="text-red-400">*</span></label>
                 <select name="role" required class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
-                    <option value="warehouse_manager" {{ old('role', $user->role) === 'warehouse_manager' ? 'selected' : '' }}>Manajer Gudang</option>
-                    <option value="warehouse_staff" {{ old('role', $user->role) === 'warehouse_staff' ? 'selected' : '' }}>Staff Gudang</option>
+                    <option value="">-- Pilih Role --</option>
+                    <option value="Admin" {{ old('role', $user->role) === 'Admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="Manajer Gudang" {{ old('role', $user->role) === 'Manajer Gudang' ? 'selected' : '' }}>Manajer Gudang</option>
+                    <option value="Staff Gudang" {{ old('role', $user->role) === 'Staff Gudang' ? 'selected' : '' }}>Staff Gudang</option>
                 </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1.5">Telepon</label>
-                <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
-                    class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-300 mb-1.5">Password Baru <span class="text-gray-500">(kosongkan jika tidak diubah)</span></label>
