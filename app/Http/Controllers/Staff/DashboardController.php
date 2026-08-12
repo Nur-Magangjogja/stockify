@@ -13,15 +13,15 @@ class DashboardController extends Controller
     public function index()
     {
         $pendingIn  = Stock_transaction::with('product')
-            ->where('type', 'in')
-            ->where('status', 'pending')
+            ->where('type', Stock_transaction::TYPE_IN)
+            ->where('status', Stock_transaction::STATUS_PENDING)
             ->latest()
             ->limit(10)
             ->get();
 
         $pendingOut = Stock_transaction::with('product')
-            ->where('type', 'out')
-            ->where('status', 'pending')
+            ->where('type', Stock_transaction::TYPE_OUT)
+            ->where('status', Stock_transaction::STATUS_PENDING)
             ->latest()
             ->limit(10)
             ->get();

@@ -21,18 +21,22 @@
             <div class="flex items-center gap-4 px-6 py-5 hover:bg-white/[0.02] transition-colors group">
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-white truncate">{{ $tx->product->name }}</p>
-                    <p class="text-xs text-gray-400 mt-0.5">Qty: <span class="text-green-400 font-semibold">+{{ $tx->quantity }}</span> {{ $tx->product->unit }}
-                        @if($tx->reference_number)
-                        · {{ $tx->reference_number }}
-                        @endif
-                    </p>
+                    <p class="text-xs text-gray-400 mt-0.5">Qty: <span class="text-green-400 font-semibold">+{{ $tx->quantity }}</span> {{ $tx->product->unit }}</p>
                 </div>
-                <form action="{{ route('staff.stocks.confirm-in', $tx->id) }}" method="POST">
-                    @csrf
-                    <button class="px-4 py-2 bg-green-600/90 hover:bg-green-500 hover:shadow-[0_0_15px_rgba(34,197,94,0.4)] text-white text-xs font-semibold rounded-xl transition-all duration-300">
-                        Konfirmasi
-                    </button>
-                </form>
+                <div class="flex items-center gap-2">
+                    <form action="{{ route('staff.stocks.confirm-in', $tx->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-4 py-2 bg-green-600/90 hover:bg-green-500 hover:shadow-[0_0_15px_rgba(34,197,94,0.4)] text-white text-xs font-semibold rounded-xl transition-all duration-300">
+                            Konfirmasi
+                        </button>
+                    </form>
+                    <form action="{{ route('staff.stocks.cancel', $tx->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menolak transaksi ini?')" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white text-xs font-semibold rounded-xl transition-all duration-300">
+                            Tolak
+                        </button>
+                    </form>
+                </div>
             </div>
             @empty
             <div class="px-5 py-10 text-center">
@@ -57,18 +61,22 @@
             <div class="flex items-center gap-4 px-6 py-5 hover:bg-white/[0.02] transition-colors group">
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-white truncate">{{ $tx->product->name }}</p>
-                    <p class="text-xs text-gray-400 mt-0.5">Qty: <span class="text-red-400 font-semibold">-{{ $tx->quantity }}</span> {{ $tx->product->unit }}
-                        @if($tx->reference_number)
-                        · {{ $tx->reference_number }}
-                        @endif
-                    </p>
+                    <p class="text-xs text-gray-400 mt-0.5">Qty: <span class="text-red-400 font-semibold">-{{ $tx->quantity }}</span> {{ $tx->product->unit }}</p>
                 </div>
-                <form action="{{ route('staff.stocks.confirm-out', $tx->id) }}" method="POST">
-                    @csrf
-                    <button class="px-4 py-2 bg-red-600/90 hover:bg-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.4)] text-white text-xs font-semibold rounded-xl transition-all duration-300">
-                        Konfirmasi
-                    </button>
-                </form>
+                <div class="flex items-center gap-2">
+                    <form action="{{ route('staff.stocks.confirm-out', $tx->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-4 py-2 bg-red-600/90 hover:bg-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.4)] text-white text-xs font-semibold rounded-xl transition-all duration-300">
+                            Konfirmasi
+                        </button>
+                    </form>
+                    <form action="{{ route('staff.stocks.cancel', $tx->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menolak transaksi ini?')" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white text-xs font-semibold rounded-xl transition-all duration-300">
+                            Tolak
+                        </button>
+                    </form>
+                </div>
             </div>
             @empty
             <div class="px-5 py-10 text-center">

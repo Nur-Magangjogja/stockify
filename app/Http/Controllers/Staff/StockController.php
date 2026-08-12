@@ -29,4 +29,27 @@ class StockController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
+    public function cancel(int $id)
+    {
+        try {
+            $this->transactionService->cancelTransaction($id);
+            return back()->with('success', 'Transaksi berhasil dibatalkan.');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function index(Request $request)
+    {
+        $filters      = $request->only(['type', 'status', 'date_from', 'date_to', 'search', 'product_id']);
+        $transactions = $this->transactionService->getAllTransactions($filters, 15);
+        return view('admin.stocks.index', compact('transactions', 'filters'));
+    }
+
+    public function opnameIndex()
+    {
+        $products = \App\Models\Products::with('stockTransactions')->orderBy('name')->get();
+        return view('admin.stocks.opname.index', compact('products'));
+    }
 }
