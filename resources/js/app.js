@@ -4,15 +4,18 @@ import './bootstrap';
 document.addEventListener('DOMContentLoaded', () => {
 	const chartCanvas = document.getElementById('transactionChart');
 	if (chartCanvas && typeof Chart !== 'undefined') {
-		const days = Array.from({ length: 30 }, (_, index) => index + 1);
+		const labels = JSON.parse(chartCanvas.dataset.labels || '[]');
+		const dataMasuk = JSON.parse(chartCanvas.dataset.masuk || '[]');
+		const dataKeluar = JSON.parse(chartCanvas.dataset.keluar || '[]');
+
 		new Chart(chartCanvas.getContext('2d'), {
 			type: 'line',
 			data: {
-				labels: days,
+				labels: labels,
 				datasets: [
 					{
 						label: 'Masuk',
-						data: days.map(() => Math.floor(Math.random() * 50)),
+						data: dataMasuk,
 						borderColor: '#3B82F6',
 						backgroundColor: 'rgba(59, 130, 246, 0.1)',
 						tension: 0.4,
@@ -22,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					},
 					{
 						label: 'Keluar',
-						data: days.map(() => Math.floor(Math.random() * 40)),
+						data: dataKeluar,
 						borderColor: '#EF4444',
 						backgroundColor: 'rgba(239, 68, 68, 0.1)',
 						tension: 0.4,
@@ -67,21 +70,22 @@ document.addEventListener('DOMContentLoaded', () => {
 		addAttributeButton.addEventListener('click', () => {
 			noAttributeText?.classList.add('hidden');
 			const row = document.createElement('div');
-			row.className = 'flex gap-2 items-center';
+			row.className = 'attribute-row flex flex-col sm:flex-row gap-2 sm:items-center bg-gray-900/30 sm:bg-transparent p-3 sm:p-0 rounded-lg border border-gray-700 sm:border-transparent mb-2 sm:mb-0';
 			row.innerHTML = `
-				<input type="text" name="attributes[${attributeIndex}][attribute_name]" placeholder="Nama"
-					class="flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
-				<input type="text" name="attributes[${attributeIndex}][attribute_value]" placeholder="Nilai"
-					class="flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
-				<button type="button" data-remove-attribute class="p-2 text-red-400 hover:bg-red-900/20 rounded-lg flex-shrink-0">
+				<input type="text" name="attributes[${attributeIndex}][attribute_name]" placeholder="Nama Atribut" required
+					class="w-full sm:flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
+				<input type="text" name="attributes[${attributeIndex}][attribute_value]" placeholder="Nilai Atribut" required
+					class="w-full sm:flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
+				<button type="button" data-remove-attribute class="w-full sm:w-auto p-2 text-red-400 hover:bg-red-900/20 rounded-lg transition-all flex justify-center items-center gap-1 border border-red-500/20 sm:border-transparent bg-red-500/10 sm:bg-transparent flex-shrink-0 mt-1 sm:mt-0">
 					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+					<span class="text-xs font-medium sm:hidden">Hapus</span>
 				</button>`;
 			attributeContainer.appendChild(row);
 			attributeIndex += 1;
 		});
 		attributeContainer.addEventListener('click', (event) => {
 			if (event.target.closest('[data-remove-attribute]')) {
-				event.target.closest('.flex.gap-2')?.remove();
+				event.target.closest('.attribute-row')?.remove();
 				if (!attributeContainer.children.length) noAttributeText?.classList.remove('hidden');
 			}
 		});

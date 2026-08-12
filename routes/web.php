@@ -49,6 +49,7 @@ Route::prefix('admin')
     Route::get('/settings', [Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [Admin\SettingController::class, 'update'])->name('settings.update');
 
+    Route::post('products/import', [Admin\ProductController::class, 'import'])->name('products.import');
     Route::resource('products', Admin\ProductController::class);
     Route::resource('categories', Admin\CategoryController::class)->except(['show']);
     Route::resource('suppliers', Admin\SupplierController::class)->except(['show']);
@@ -85,9 +86,9 @@ Route::prefix('manager')
 
     Route::get('/dashboard', [Manager\DashboardController::class, 'index'])->name('dashboard');
 
-    //Products (read only)
-    Route::get('/products', [Admin\ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/{id}', [Admin\ProductController::class, 'show'])->name('products.show');
+    //Products
+    Route::post('products/import', [Admin\ProductController::class, 'import'])->name('products.import');
+    Route::resource('products', Admin\ProductController::class);
 
     //Suppliers (read only)
     Route::get('/suppliers', [Admin\SupplierController::class, 'index'])->name('suppliers.index');
@@ -110,6 +111,7 @@ Route::prefix('manager')
         Route::get('/',             [Manager\ReportController::class, 'index'])->name('index');
         Route::get('/stock',        [Manager\ReportController::class, 'stockReport'])->name('stock');
         Route::get('/transactions', [Manager\ReportController::class, 'transactionReport'])->name('transactions');
+        Route::get('/activities',   [Manager\ReportController::class, 'activityReport'])->name('activities');
     });
 });
 
@@ -123,5 +125,8 @@ Route::prefix('staff')
 
     Route::post('/stocks/{id}/confirm-in',  [Staff\StockController::class, 'confirmIn'])->name('stocks.confirm-in');
     Route::post('/stocks/{id}/confirm-out', [Staff\StockController::class, 'confirmOut'])->name('stocks.confirm-out');
+    Route::post('/stocks/{id}/cancel', [Staff\StockController::class, 'cancel'])->name('stocks.cancel');
+    Route::get('/stocks/opname', [Staff\StockController::class, 'opnameIndex'])->name('stocks.opname.index');
+    Route::get('/stocks', [Staff\StockController::class, 'index'])->name('stocks.index');
 });
 
