@@ -32,7 +32,12 @@ class Products extends Model
     public function getBuyPriceAttribute() { return $this->purchase_price; }
     public function getSellPriceAttribute() { return $this->selling_price; }
     public function getMinStockAttribute() { return $this->minimum_stock; }
-    public function getStockAttribute() { return $this->stockTransactions->where('status', Stock_transaction::STATUS_DITERIMA)->sum(fn ($transaction) => $transaction->type === Stock_transaction::TYPE_MASUK ? $transaction->quantity : -$transaction->quantity); }
+    public function getStockAttribute() { 
+        if (array_key_exists('stock_calculated', $this->attributes)) {
+            return (int) $this->attributes['stock_calculated'];
+        }
+        return $this->stockTransactions->where('status', Stock_transaction::STATUS_DITERIMA)->sum(fn ($transaction) => $transaction->type === Stock_transaction::TYPE_MASUK ? $transaction->quantity : -$transaction->quantity); 
+    }
     public function getIsLowStockAttribute() { return $this->stock <= $this->minimum_stock; }
     public function getImageUrlAttribute() { 
         if (!$this->image || $this->image === 'noimage.png') {
@@ -43,7 +48,12 @@ class Products extends Model
     public function getUnitAttribute() { return 'pcs'; }
     public function getIsActiveAttribute() { return true; }
     public function getStockStatusLabelAttribute() { return $this->stock <= 0 ? 'Habis' : ($this->stock <= $this->minimum_stock ? 'Menipis' : 'Aman'); }
-    public function getHasPendingTransactionAttribute() { return $this->stockTransactions->contains('status', Stock_transaction::STATUS_PENDING); }
+    public function getHasPendingTransactionAttribute() { 
+        if (array_key_exists('has_pending_calculated', $this->attributes)) {
+            return (bool) $this->attributes['has_pending_calculated'];
+        }
+        return $this->stockTransactions->contains('status', Stock_transaction::STATUS_PENDING); 
+    }
 
     public function category()
     {

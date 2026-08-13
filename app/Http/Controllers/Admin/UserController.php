@@ -91,6 +91,11 @@ class UserController extends Controller
             $this->userService->deleteUser($id);
             return redirect()->route('admin.users.index')
                 ->with('success', 'User berhasil dihapus.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return back()->with('error', 'Gagal dihapus: Pengguna ini masih memiliki riwayat transaksi (Stock Transactions). Hapus riwayat atau jadikan non-aktif pengguna ini.');
+            }
+            return back()->with('error', 'Terjadi kesalahan pada database: ' . $e->getMessage());
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }

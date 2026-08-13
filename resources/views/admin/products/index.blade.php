@@ -146,7 +146,7 @@
                                 </svg>
                             </a>
                             <x-delete-button 
-                                action="{{ route("{$prefix}.products.destroy", $product->id) }}" 
+                                action="{{ route($prefix . '.products.destroy', $product->id) }}" 
                                 message="Hapus produk {{ addslashes($product->name) }}?" 
                                 class="p-1.5 text-gray-400 hover:text-red-400 rounded-lg hover:bg-red-900/20 transition-all border-none bg-transparent" />
                         </div>

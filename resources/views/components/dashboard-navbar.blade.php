@@ -5,9 +5,13 @@
         'Manajer Gudang' => 'manager',
         default => 'staff',
     };
-    // Mengambil 5 produk teratas yang stoknya menipis/habis untuk ditampilkan di dropdown
-    $lowStockProducts = \App\Models\Products::lowStock()->take(5)->get();
-    $lowStockCount = \App\Models\Products::lowStock()->count();
+    // Menggunakan cache selama 5 menit agar tidak membebani database setiap kali pindah halaman
+    $lowStockProducts = \Illuminate\Support\Facades\Cache::remember('low_stock_products', 300, function() {
+        return \App\Models\Products::lowStock()->take(5)->get();
+    });
+    $lowStockCount = \Illuminate\Support\Facades\Cache::remember('low_stock_count', 300, function() {
+        return \App\Models\Products::lowStock()->count();
+    });
 @endphp
 
 <nav class="sticky top-0 z-30 flex items-center gap-4 border-b border-white/5 bg-gray-900/70 backdrop-blur-md px-4 py-3 shadow-sm transition-all duration-300">

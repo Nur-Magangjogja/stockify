@@ -32,10 +32,10 @@
     <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-lg overflow-hidden flex flex-col">
         {{-- Header Kategori --}}
         <div class="p-5 border-b border-gray-700 flex justify-between items-start bg-gray-800/50">
-            <div>
-                <h3 class="font-bold text-lg text-white mb-1">{{ $category->name }}</h3>
+            <div class="flex-1 min-w-0 pr-4">
+                <h3 class="font-bold text-lg text-white mb-1 truncate">{{ $category->name }}</h3>
                 @if($category->description)
-                <p class="text-sm text-gray-400 max-w-xs">{{ $category->description }}</p>
+                <p class="text-sm text-gray-400 break-words line-clamp-2">{{ $category->description }}</p>
                 @endif
             </div>
             
@@ -52,6 +52,12 @@
                     action="{{ route('admin.categories.destroy', $category->id) }}" 
                     message="Hapus kategori {{ addslashes($category->name) }}?" 
                     class="p-1.5 text-gray-400 hover:text-red-400 rounded-lg hover:bg-red-900/20 transition-all border-none bg-transparent" />
+                @else
+                <button type="button" class="p-1.5 text-gray-600 rounded-lg cursor-not-allowed bg-transparent" title="Tidak dapat dihapus karena masih memiliki {{ $category->products->count() }} produk terkait">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                </button>
                 @endif
             </div>
         </div>
@@ -62,7 +68,7 @@
             @if($category->products->count() > 0)
             <div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
                 @foreach($category->products as $product)
-                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-700 text-gray-200 border border-gray-600">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-700 text-gray-200 border border-gray-600 max-w-full truncate" title="{{ $product->name }}">
                     {{ $product->name }}
                 </span>
                 @endforeach

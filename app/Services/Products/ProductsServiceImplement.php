@@ -38,7 +38,10 @@ class ProductsServiceImplement extends Service implements ProductsService{
 
     public function getAllProducts(array $filters = [], int $perPage = 15)
     {
-      $query = Products::query()->with(['category', 'supplier', 'stockTransactions']);
+      $query = Products::query()->with(['category', 'supplier'])
+          ->select('products.*')
+          ->selectRaw("COALESCE((SELECT SUM(CASE WHEN status = 'Diterima' AND type = 'Masuk' THEN quantity WHEN status = 'Diterima' AND type = 'Keluar' THEN -quantity ELSE 0 END) FROM stock_transactions WHERE stock_transactions.product_id = products.id), 0) as stock_calculated")
+          ->selectRaw("EXISTS(SELECT 1 FROM stock_transactions WHERE stock_transactions.product_id = products.id AND status = 'Pending') as has_pending_calculated");
       foreach (['category_id', 'supplier_id'] as $field) {
         if (array_key_exists($field, $filters) && $filters[$field] !== null && $filters[$field] !== '') {
           $query->where($field, $filters[$field]);

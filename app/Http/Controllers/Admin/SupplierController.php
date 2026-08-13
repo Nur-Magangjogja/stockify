@@ -80,6 +80,11 @@ class SupplierController extends Controller
             $this->supplierService->deleteSupplier($id);
             return redirect()->route('admin.suppliers.index')
                 ->with('success', 'Supplier berhasil dihapus.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return back()->with('error', 'Gagal dihapus: Supplier ini masih memiliki produk yang terdaftar. Hapus atau pindahkan produk tersebut terlebih dahulu.');
+            }
+            return back()->with('error', 'Terjadi kesalahan pada database: ' . $e->getMessage());
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }

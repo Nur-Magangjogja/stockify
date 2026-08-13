@@ -1,6 +1,6 @@
 @props(['action' => request()->url(), 'placeholder' => 'Cari...', 'search' => request('search'), 'hideDefault' => false])
 
-<form method="GET" action="{{ $action }}" class="flex flex-col md:flex-row flex-wrap gap-3 w-full sm:w-auto">
+<form method="GET" action="{{ $action }}" class="flex flex-col md:flex-row flex-wrap items-end gap-3 w-full sm:w-auto">
     {{-- Preserve existing query strings except search and page --}}
     @foreach(request()->query() as $key => $value)
         @if($key !== 'search' && $key !== 'page' && !is_array($value))
