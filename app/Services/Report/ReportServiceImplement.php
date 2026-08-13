@@ -76,7 +76,7 @@ class ReportServiceImplement implements ReportService
         $lowStockCount = $aggregateQuery->low_count ?? 0;
         $outOfStock = $aggregateQuery->out_count ?? 0;
 
-        $products = $paginate ? $query->paginate($perPage) : $query->get();
+        $products = $paginate ? $query->paginate($perPage) : $query->cursor();
 
         return [
             'products'          => $products,
@@ -129,7 +129,7 @@ class ReportServiceImplement implements ReportService
         $totalInQty = $totalInQuery->sum('quantity');
         $totalOutQty = $totalOutQuery->sum('quantity');
 
-        $transactions = $paginate ? $query->paginate($perPage) : $query->get();
+        $transactions = $paginate ? $query->paginate($perPage) : $query->cursor();
 
         return [
             'transactions'  => $transactions,
@@ -147,9 +147,9 @@ class ReportServiceImplement implements ReportService
      * @param array $filters
      * @return mixed
      */
-    public function getActivityReport(array $filters = [], int $perPage = 20)
+    public function getActivityReport(array $filters = [], int $perPage = 20, bool $paginate = true)
     {
-        return $this->activityLogService->getActivitiesPaginated($filters, $perPage);
+        return $this->activityLogService->getActivitiesPaginated($filters, $perPage, $paginate);
     }
 
     /**

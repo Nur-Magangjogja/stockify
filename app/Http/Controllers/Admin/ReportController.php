@@ -65,7 +65,7 @@ class ReportController extends Controller
         // We will just fetch everything if exporting, or use the paginator's items.
         // For simplicity, we'll export what is fetched, but getActivitiesPaginated accepts limit.
         if ($request->get('export') === 'excel') {
-            $activities = $this->reportService->getActivityReport($filters, 10000)->items();
+            $activities = $this->reportService->getActivityReport($filters, 10000, false);
             return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ActivityExport($activities), 'laporan-aktivitas-' . date('Y-m-d') . '.xlsx');
         }
 

@@ -38,7 +38,7 @@ class ProductsServiceImplement extends Service implements ProductsService{
 
     public function getAllProducts(array $filters = [], int $perPage = 15)
     {
-      $query = Products::query()->with(['category', 'supplier']);
+      $query = Products::query()->with(['category', 'supplier', 'stockTransactions']);
       foreach (['category_id', 'supplier_id'] as $field) {
         if (array_key_exists($field, $filters) && $filters[$field] !== null && $filters[$field] !== '') {
           $query->where($field, $filters[$field]);

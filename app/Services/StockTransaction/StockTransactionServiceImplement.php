@@ -254,22 +254,29 @@ class StockTransactionServiceImplement implements StockTransactionService
                 $logMessage = "Kompresi data transaksi pada bulan $monthName menjadi Saldo Awal.";
             }
 
-            // Get confirmed transactions to summarize
-            $confirmedTx = (clone $query)->where('status', Stock_transaction::STATUS_CONFIRMED)->get();
+            // Menggunakan Chunking (Lazy Loading / pengelompokan data) untuk menghindari kehabisan memory
+            // jika data transaksi sangat besar (misal 50.000 transaksi)
             $productSummaries = [];
-            
-            foreach ($confirmedTx as $tx) {
-                $pid = $tx->product_id;
-                if (!isset($productSummaries[$pid])) {
-                    $productSummaries[$pid] = 0;
-                }
-                
-                if ($tx->type === Stock_transaction::TYPE_IN) {
-                    $productSummaries[$pid] += $tx->quantity;
-                } else {
-                    $productSummaries[$pid] -= $tx->quantity;
-                }
-            }
+            (clone $query)->where('status', Stock_transaction::STATUS_CONFIRMED)
+                ->chunkById(1000, function ($transactions) use (&$productSummaries) {
+                    
+                    // Lazy Eager Loading: Memuat relasi product hanya untuk 1000 data ini
+                    // untuk mencegah N+1 query jika relasi tersebut diakses di dalam looping
+                    $transactions->load('product');
+
+                    foreach ($transactions as $tx) {
+                        $pid = $tx->product_id;
+                        if (!isset($productSummaries[$pid])) {
+                            $productSummaries[$pid] = 0;
+                        }
+                        
+                        if ($tx->type === Stock_transaction::TYPE_IN) {
+                            $productSummaries[$pid] += $tx->quantity;
+                        } else {
+                            $productSummaries[$pid] -= $tx->quantity;
+                        }
+                    }
+                });
 
             // Delete all matched old transactions
             $query->delete();

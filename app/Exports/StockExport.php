@@ -2,14 +2,14 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromIterator;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class StockExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class StockExport implements FromIterator, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
 {
     protected $reportData;
 
@@ -18,9 +18,9 @@ class StockExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
         $this->reportData = $reportData;
     }
 
-    public function collection()
+    public function iterator(): \Iterator
     {
-        return $this->reportData['products'];
+        return $this->reportData['products']->getIterator();
     }
 
     public function headings(): array

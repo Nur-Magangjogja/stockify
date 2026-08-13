@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromIterator;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Carbon\Carbon;
 
-class TransactionExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class TransactionExport implements FromIterator, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
 {
     protected $reportData;
 
@@ -19,9 +19,9 @@ class TransactionExport implements FromCollection, WithHeadings, WithMapping, Sh
         $this->reportData = $reportData;
     }
 
-    public function collection()
+    public function iterator(): \Iterator
     {
-        return collect($this->reportData['transactions']);
+        return $this->reportData['transactions']->getIterator();
     }
 
     public function headings(): array

@@ -48,10 +48,10 @@ class ActivityLogRepositoryImplement extends Eloquent implements ActivityLogRepo
      * Get paginated activity logs with filters.
      *
      * @param array $filters
-     * @param int $perPage
+     * @param bool $paginate
      * @return mixed
      */
-    public function getPaginated(array $filters = [], int $perPage = 20)
+    public function getPaginated(array $filters = [], int $perPage = 20, bool $paginate = true)
     {
         $query = $this->model->with('user')->orderBy('created_at', 'desc');
 
@@ -70,6 +70,6 @@ class ActivityLogRepositoryImplement extends Eloquent implements ActivityLogRepo
             ]);
         }
 
-        return $query->paginate($perPage)->appends($filters);
+        return $paginate ? $query->paginate($perPage)->appends($filters) : $query->cursor();
     }
 }

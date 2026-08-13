@@ -64,9 +64,9 @@ class ActivityLogServiceImplement implements ActivityLogService
      * @param int $perPage
      * @return mixed
      */
-    public function getActivitiesPaginated(array $filters = [], int $perPage = 20)
+    public function getActivitiesPaginated(array $filters = [], int $perPage = 20, bool $paginate = true)
     {
-        return $this->repository->getPaginated($filters, $perPage);
+        return $this->repository->getPaginated($filters, $perPage, $paginate);
     }
 
     /**

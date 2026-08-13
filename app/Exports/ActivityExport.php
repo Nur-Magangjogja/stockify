@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromIterator;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Carbon\Carbon;
 
-class ActivityExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class ActivityExport implements FromIterator, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
 {
     protected $activities;
 
@@ -19,9 +19,10 @@ class ActivityExport implements FromCollection, WithHeadings, WithMapping, Shoul
         $this->activities = $activities;
     }
 
-    public function collection()
+    public function iterator(): \Iterator
     {
-        return collect($this->activities);
+        // Convert LazyCollection to an Iterator
+        return $this->activities->getIterator();
     }
 
     public function headings(): array

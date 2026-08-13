@@ -98,8 +98,8 @@
 
                 <form action="{{ route('admin.settings.reset-transactions') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus dan mengkompres data transaksi pada periode ini? Proses ini tidak dapat dibatalkan.')">
                     @csrf
-                    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-end">
-                        <div class="w-full sm:w-1/3">
+                    <div class="flex flex-col xl:flex-row gap-3 items-start xl:items-end">
+                        <div class="w-full xl:w-1/4">
                             <label class="block text-sm font-medium text-gray-300 mb-1.5">Tipe Pemilihan</label>
                             <select name="delete_type" id="delete_type" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
                                 <option value="date_range">Rentang Tanggal</option>
@@ -125,7 +125,7 @@
                             <input type="month" name="specific_month" id="specific_month" max="{{ date('Y-m') }}"
                                 class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
                         </div>
-                        <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-red-900/20 whitespace-nowrap mt-3 sm:mt-0">
+                        <button type="submit" class="w-full xl:w-auto px-5 py-2.5 bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-red-900/20 whitespace-nowrap mt-3 xl:mt-0">
                             Kompres & Hapus Data
                         </button>
                     </div>
@@ -141,8 +141,8 @@
 
                 <form action="{{ route('admin.settings.reset-activities') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data aktivitas pada periode ini? Proses ini tidak dapat dibatalkan.')">
                     @csrf
-                    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-end">
-                        <div class="w-full sm:w-1/3">
+                    <div class="flex flex-col xl:flex-row gap-3 items-start xl:items-end">
+                        <div class="w-full xl:w-1/4">
                             <label class="block text-sm font-medium text-gray-300 mb-1.5">Tipe Pemilihan</label>
                             <select name="activity_delete_type" id="activity_delete_type" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
                                 <option value="date_range">Rentang Tanggal</option>
@@ -168,7 +168,7 @@
                             <input type="month" name="activity_specific_month" id="activity_specific_month" max="{{ date('Y-m') }}"
                                 class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
                         </div>
-                        <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-red-900/20 whitespace-nowrap mt-3 sm:mt-0">
+                        <button type="submit" class="w-full xl:w-auto px-5 py-2.5 bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-red-900/20 whitespace-nowrap mt-3 xl:mt-0">
                             Hapus Data
                         </button>
                     </div>
