@@ -47,9 +47,17 @@ class StockController extends Controller
         return view('admin.stocks.index', compact('transactions', 'filters'));
     }
 
-    public function opnameIndex()
+    public function opnameIndex(Request $request)
     {
-        $products = \App\Models\Products::with('stockTransactions')->orderBy('name')->get();
+        $query = \App\Models\Products::with('stockTransactions')->orderBy('name');
+        
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('sku', 'like', "%{$search}%");
+        }
+
+        $products = $query->paginate(15)->appends($request->only('search'));
+        
         return view('admin.stocks.opname.index', compact('products'));
     }
 }

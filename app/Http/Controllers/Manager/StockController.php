@@ -42,7 +42,17 @@ class StockController extends Controller
             'quantity'         => 'required|integer|min:1',
             'notes'            => 'nullable|string',
             'date'             => 'required|date',
+            'supplier_id'      => 'nullable|exists:suppliers,id',
+            'reference_number' => 'nullable|string|max:100|unique:products,sku,' . $request->product_id,
         ]);
+
+        $product = \App\Models\Products::find($request->product_id);
+        $newSupplierId = array_key_exists('supplier_id', $validated) ? $validated['supplier_id'] : $product->supplier_id;
+        $newSku = !empty($validated['reference_number']) ? $validated['reference_number'] : $product->sku;
+
+        if ($newSupplierId != $product->supplier_id && $newSku === $product->sku) {
+            return back()->withInput()->with('error', 'Peringatan: Jika Anda mengganti Supplier, Anda <b>wajib mengganti No. Referensi / SKU</b> dengan kode yang baru (tidak boleh sama dengan produk sebelumnya).');
+        }
 
         try {
             $tx = $this->transactionService->recordStockIn($validated);
@@ -88,9 +98,17 @@ class StockController extends Controller
     }
 
     // Opname menggunakan tabel products dan stock_transactions yang sudah ada.
-    public function opnameIndex()
+    public function opnameIndex(Request $request)
     {
-        $products = Products::with('stockTransactions')->orderBy('name')->get();
+        $query = Products::with('stockTransactions')->orderBy('name');
+        
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('sku', 'like', "%{$search}%");
+        }
+
+        $products = $query->paginate(15)->appends($request->only('search'));
+        
         return view('manager.stocks.opname.index', compact('products'));
     }
 
@@ -98,9 +116,9 @@ class StockController extends Controller
     {
         $validated = $request->validate([
             'opname_date' => 'required|date',
-            'notes'       => 'nullable|string',
+            'notes'       => 'required|string',
             'stocks'      => 'required|array',
-            'stocks.*'    => 'required|integer|min:0',
+            'stocks.*'    => 'required|integer|min:0|max:4294967295',
         ]);
 
         DB::transaction(function () use ($validated) {
