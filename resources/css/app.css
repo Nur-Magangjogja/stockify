@@ -102,6 +102,40 @@
 		transform: translateY(-2px);
 		box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
 	}
+
+	.btn-danger {
+		@apply bg-red-600/90 hover:bg-red-600 text-white transition-all shadow-lg shadow-red-900/20;
+	}
+
+	.btn-warning {
+		@apply bg-yellow-600/90 hover:bg-yellow-600 text-white transition-all shadow-lg shadow-yellow-900/20;
+	}
+
+	/* Form Utilities */
+	.form-label {
+		@apply block text-sm font-medium text-gray-300 mb-1.5;
+	}
+
+	/* Table Utilities */
+	.table-standard {
+		@apply w-full text-sm text-left text-gray-300;
+	}
+
+	.table-head {
+		@apply text-xs text-gray-400 uppercase bg-gray-800/50 border-b border-gray-700;
+	}
+
+	.table-row {
+		@apply bg-gray-800/20 hover:bg-gray-800/40 transition-colors;
+	}
+
+	.table-cell {
+		@apply px-5 py-4;
+	}
+
+	.table-cell-head {
+		@apply px-5 py-4 font-medium;
+	}
 }
 
 [x-cloak] {

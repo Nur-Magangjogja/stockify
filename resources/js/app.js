@@ -253,4 +253,124 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (!window.confirm(form.dataset.confirm)) event.preventDefault();
 		});
 	});
+	// Settings JS Logic
+	const unlockDangerZone = document.getElementById('unlock-danger-zone');
+	if (unlockDangerZone) {
+		unlockDangerZone.addEventListener('click', function() {
+			if (confirm('PERINGATAN: Area ini berisi menu untuk menghapus data sistem secara permanen. Apakah Anda yakin ingin membukanya?')) {
+				document.getElementById('danger-zone-content').classList.remove('hidden');
+				this.classList.add('hidden');
+			}
+		});
+	}
+
+	const appLogo = document.getElementById('app_logo');
+	if (appLogo) {
+		appLogo.addEventListener('change', function(e) {
+			const file = e.target.files[0];
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = function(e) {
+					const preview = document.getElementById('logo-preview');
+					const defaultIcon = document.getElementById('default-logo-icon');
+					
+					preview.src = e.target.result;
+					preview.classList.remove('hidden');
+					
+					if (defaultIcon) {
+						defaultIcon.classList.add('hidden');
+					}
+				}
+				reader.readAsDataURL(file);
+			}
+		});
+	}
+
+	const handleDateOrMonthVisibility = (typeSelectId, dateContainerId, monthContainerId, startDateId, endDateId, monthId) => {
+		const typeSelect = document.getElementById(typeSelectId);
+		if (typeSelect) {
+			typeSelect.addEventListener('change', function(e) {
+				const type = e.target.value;
+				const dateContainer = document.getElementById(dateContainerId);
+				const monthContainer = document.getElementById(monthContainerId);
+				const startDate = document.getElementById(startDateId);
+				const endDate = document.getElementById(endDateId);
+				const specificMonth = document.getElementById(monthId);
+
+				if (type === 'date_range') {
+					dateContainer.classList.remove('hidden');
+					monthContainer.classList.add('hidden');
+					startDate.required = true;
+					endDate.required = true;
+					specificMonth.required = false;
+				} else {
+					dateContainer.classList.add('hidden');
+					monthContainer.classList.remove('hidden');
+					startDate.required = false;
+					endDate.required = false;
+					specificMonth.required = true;
+				}
+			});
+		}
+	};
+
+	handleDateOrMonthVisibility('delete_type', 'container_date', 'container_month', 'start_date', 'end_date', 'specific_month');
+	handleDateOrMonthVisibility('activity_delete_type', 'activity_container_date', 'activity_container_month', 'activity_start_date', 'activity_end_date', 'activity_specific_month');
+
+	// Product selection logic for create-in and create-out
+	const productSelect = document.getElementById('product-select');
+	const productInfo = document.getElementById('product-info');
+	const currentStock = document.getElementById('current-stock');
+	const unitPriceHidden = document.getElementById('unit-price-hidden');
+	const unitPriceDisplay = document.getElementById('unit-price-display');
+
+	if (productSelect) {
+		function updateProductDetails() {
+			const selectedOption = productSelect.options[productSelect.selectedIndex];
+			
+			if (selectedOption.value) {
+				const stock = selectedOption.getAttribute('data-stock');
+				const unit = selectedOption.getAttribute('data-unit');
+				const price = parseInt(selectedOption.getAttribute('data-price')) || 0;
+				const supplierId = selectedOption.getAttribute('data-supplier');
+				const sku = selectedOption.getAttribute('data-sku');
+
+				if (currentStock) currentStock.textContent = `${stock} ${unit}`;
+				if (productInfo) productInfo.classList.remove('hidden');
+				
+				const quantityInput = document.getElementById('quantity-input');
+				if (quantityInput && !document.getElementById('supplier-select')) { // if it's create-out, it has no supplier-select usually, or just limit anyway
+					quantityInput.max = stock;
+				}
+
+				if (unitPriceHidden) unitPriceHidden.value = price;
+				if (unitPriceDisplay) unitPriceDisplay.value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+				
+				const supplierSelect = document.getElementById('supplier-select');
+				if(supplierSelect && supplierId) {
+					supplierSelect.value = supplierId;
+				}
+				const refInput = document.getElementById('reference-input');
+				if(refInput && sku) {
+					refInput.value = sku;
+				}
+			} else {
+				if (productInfo) productInfo.classList.add('hidden');
+				const quantityInput = document.getElementById('quantity-input');
+				if (quantityInput) quantityInput.removeAttribute('max');
+				if (unitPriceHidden) unitPriceHidden.value = '';
+				if (unitPriceDisplay) unitPriceDisplay.value = '';
+				const supplierSelect = document.getElementById('supplier-select');
+				if(supplierSelect) supplierSelect.value = '';
+				const refInput = document.getElementById('reference-input');
+				if(refInput) refInput.value = '';
+			}
+		}
+
+		productSelect.addEventListener('change', updateProductDetails);
+		
+		if (productSelect.value) {
+			updateProductDetails();
+		}
+	}
 });

@@ -58,13 +58,8 @@
 
 {{-- Filter --}}
 <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-5">
-    <form method="GET" action="{{ request()->url() }}" class="flex flex-col md:flex-row flex-wrap gap-3">
-        <div class="flex-1 w-full md:w-auto min-w-[200px]">
-            <input type="text" name="search" value="{{ $filters['search'] ?? '' }}"
-                placeholder="Cari nama, kode produk..."
-                class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
-        </div>
-        <select name="category_id" class="w-full md:w-auto bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+    <x-search-filter :action="request()->url()" placeholder="Cari nama, kode produk..." :search="$filters['search'] ?? ''">
+        <select name="category_id" class="input-field w-full md:w-auto text-sm rounded-lg px-3 py-2.5">
             <option value="">Semua Kategori</option>
             @foreach($categories as $category)
             <option value="{{ $category->id }}" {{ ($filters['category_id'] ?? '') == $category->id ? 'selected' : '' }}>
@@ -72,39 +67,33 @@
             </option>
             @endforeach
         </select>
-        <select name="stock_status" class="w-full md:w-auto bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+        <select name="stock_status" class="input-field w-full md:w-auto text-sm rounded-lg px-3 py-2.5">
             <option value="">Semua Status Stok</option>
             <option value="low" {{ ($filters['stock_status'] ?? '') === 'low' ? 'selected' : '' }}>Stok Menipis</option>
             <option value="out" {{ ($filters['stock_status'] ?? '') === 'out' ? 'selected' : '' }}>Stok Habis</option>
         </select>
-        <div class="flex flex-wrap gap-2 w-full md:w-auto">
-            <button type="submit" class="flex-1 sm:flex-none px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-all">Filter</button>
-            @if(array_filter($filters))
-            <a href="{{ request()->url() }}" class="flex-1 sm:flex-none text-center px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-all">Reset</a>
-            @endif
-        </div>
-    </form>
+    </x-search-filter>
 </div>
 
 {{-- Table --}}
 <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
     <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left">
-            <thead>
-                <tr class="bg-gray-750 border-b border-gray-700">
-                    <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">Produk</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">Kategori</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">Stok</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide hidden lg:table-cell">Harga Beli</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide hidden lg:table-cell">Harga Jual</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">Status</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right">Aksi</th>
+        <table class="table-standard">
+            <thead class="table-head">
+                <tr>
+                    <th class="table-cell-head">Produk</th>
+                    <th class="table-cell-head">Kategori</th>
+                    <th class="table-cell-head">Stok</th>
+                    <th class="table-cell-head hidden lg:table-cell">Harga Beli</th>
+                    <th class="table-cell-head hidden lg:table-cell">Harga Jual</th>
+                    <th class="table-cell-head">Status</th>
+                    <th class="table-cell-head text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-700">
                 @forelse($products as $product)
-                <tr class="hover:bg-gray-750 transition-colors">
-                    <td class="px-5 py-4">
+                <tr class="table-row">
+                    <td class="table-cell">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-lg bg-gray-700 flex-shrink-0 overflow-hidden">
                                 <img src="{{ $product->image ? $product->image_url : 'https://placehold.co/600x400/374151/9ca3af?text=No+Image' }}" class="w-full h-full object-cover" alt="{{ $product->name }}">
@@ -115,10 +104,10 @@
                             </div>
                         </div>
                     </td>
-                    <td class="px-4 py-4">
+                    <td class="table-cell">
                         <span class="text-gray-300 text-sm">{{ $product->category->name ?? '-' }}</span>
                     </td>
-                    <td class="px-4 py-4">
+                    <td class="table-cell">
                         <div>
                             <span class="font-semibold {{ $product->stock <= 0 ? 'text-red-400' : ($product->is_low_stock ? 'text-amber-400' : 'text-green-400') }}">
                                 {{ number_format($product->stock) }} {{ $product->unit }}
@@ -128,19 +117,19 @@
                             @endif
                         </div>
                     </td>
-                    <td class="px-4 py-4 hidden lg:table-cell">
+                    <td class="table-cell hidden lg:table-cell">
                         <span class="text-gray-300">Rp {{ number_format($product->buy_price, 0, ',', '.') }}</span>
                     </td>
-                    <td class="px-4 py-4 hidden lg:table-cell">
+                    <td class="table-cell hidden lg:table-cell">
                         <span class="text-gray-300">Rp {{ number_format($product->sell_price, 0, ',', '.') }}</span>
                     </td>
-                    <td class="px-4 py-4">
+                    <td class="table-cell">
                         <x-stock-badge
                             :stock="$product->stock"
                             :min-stock="$product->min_stock"
                         />
                     </td>
-                    <td class="px-4 py-4 text-right">
+                    <td class="table-cell text-right">
                         <div class="flex items-center justify-end gap-1">
                             <a href="{{ route(auth()->user()->isAdmin() ? 'admin.products.show' : 'manager.products.show', $product->id) }}"
                                class="p-1.5 text-gray-400 hover:text-blue-400 rounded-lg hover:bg-blue-900/20 transition-all"
@@ -156,15 +145,10 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                 </svg>
                             </a>
-                            <form action="{{ route("{$prefix}.products.destroy", $product->id) }}" method="POST" class="inline"
-                                data-confirm="{{ e('Hapus produk ' . $product->name . '?') }}">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="p-1.5 text-gray-400 hover:text-red-400 rounded-lg hover:bg-red-900/20 transition-all" title="Hapus">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                    </svg>
-                                </button>
-                            </form>
+                            <x-delete-button 
+                                action="{{ route("{$prefix}.products.destroy", $product->id) }}" 
+                                message="Hapus produk {{ addslashes($product->name) }}?" 
+                                class="p-1.5 text-gray-400 hover:text-red-400 rounded-lg hover:bg-red-900/20 transition-all border-none bg-transparent" />
                         </div>
                     </td>
                 </tr>

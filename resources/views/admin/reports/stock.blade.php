@@ -21,10 +21,10 @@
 
 {{-- Filter --}}
 <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-5">
-    <form method="GET" class="flex flex-wrap gap-3 items-end">
+    <x-search-filter :action="request()->url()" :hideDefault="true">
         <div>
             <label class="block text-xs text-gray-400 mb-1">Kategori</label>
-            <select name="category_id" class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2">
+            <select name="category_id" class="input-field text-sm rounded-lg px-3 py-2">
                 <option value="">Semua Kategori</option>
                 @foreach($categories as $cat)
                 <option value="{{ $cat->id }}" {{ ($filters['category_id'] ?? '') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -33,51 +33,50 @@
         </div>
         <div>
             <label class="block text-xs text-gray-400 mb-1">Status Stok</label>
-            <select name="stock_status" class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2">
+            <select name="stock_status" class="input-field text-sm rounded-lg px-3 py-2">
                 <option value="">Semua</option>
                 <option value="low" {{ ($filters['stock_status'] ?? '') === 'low' ? 'selected' : '' }}>Menipis</option>
                 <option value="out" {{ ($filters['stock_status'] ?? '') === 'out' ? 'selected' : '' }}>Habis</option>
             </select>
         </div>
-        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-all">Tampilkan</button>
         <a href="{{ request()->fullUrlWithQuery(['export' => 'excel']) }}" target="_blank"
-           class="flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-all">
+           class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-all w-full sm:w-auto h-[38px] self-end mb-[2px]">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
             </svg>
             Export Excel
         </a>
-    </form>
+    </x-search-filter>
 </div>
 
 {{-- Table --}}
 <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
     <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left">
-            <thead class="border-b border-gray-700">
+        <table class="table-standard">
+            <thead class="table-head">
                 <tr>
-                    <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase">Produk</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Kategori</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase text-center">Stok</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase text-center">Min Stok</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase text-right">Nilai Stok</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Status</th>
+                    <th class="table-cell-head">Produk</th>
+                    <th class="table-cell-head">Kategori</th>
+                    <th class="table-cell-head text-center">Stok</th>
+                    <th class="table-cell-head text-center">Min Stok</th>
+                    <th class="table-cell-head text-right">Nilai Stok</th>
+                    <th class="table-cell-head">Status</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-700">
                 @forelse($report['products'] as $product)
-                <tr class="hover:bg-gray-750 transition-colors">
-                    <td class="px-5 py-3.5">
+                <tr class="table-row">
+                    <td class="table-cell">
                         <p class="font-medium text-white">{{ $product->name }}</p>
                         <p class="text-xs text-gray-400 font-mono">{{ $product->code }}</p>
                     </td>
-                    <td class="px-4 py-3.5 text-gray-300">{{ $product->category_name ?? '-' }}</td>
-                    <td class="px-4 py-3.5 text-center font-semibold {{ $product->stock <= 0 ? 'text-red-400' : ($product->is_low_stock ? 'text-amber-400' : 'text-green-400') }}">
+                    <td class="table-cell text-gray-300">{{ $product->category_name ?? '-' }}</td>
+                    <td class="table-cell text-center font-semibold {{ $product->stock <= 0 ? 'text-red-400' : ($product->is_low_stock ? 'text-amber-400' : 'text-green-400') }}">
                         {{ number_format($product->stock) }} {{ $product->unit }}
                     </td>
-                    <td class="px-4 py-3.5 text-center text-gray-400">{{ $product->min_stock }}</td>
-                    <td class="px-4 py-3.5 text-right text-gray-300">Rp {{ number_format($product->stock * $product->buy_price, 0, ',', '.') }}</td>
-                    <td class="px-4 py-3.5">
+                    <td class="table-cell text-center text-gray-400">{{ $product->min_stock }}</td>
+                    <td class="table-cell text-right text-gray-300">Rp {{ number_format($product->stock * $product->buy_price, 0, ',', '.') }}</td>
+                    <td class="table-cell">
                         <span class="px-2 py-0.5 text-xs rounded-full {{ $product->stock <= 0 ? 'bg-red-900/40 text-red-400' : ($product->is_low_stock ? 'bg-amber-900/40 text-amber-400' : 'bg-green-900/40 text-green-400') }}">
                             {{ $product->stock_status_label }}
                         </span>

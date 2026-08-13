@@ -19,10 +19,10 @@
 </div>
 
 <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-5">
-    <form method="GET" class="flex flex-wrap gap-3 items-end">
+    <x-search-filter :action="request()->url()" :hideDefault="true">
         <div>
             <label class="block text-xs text-gray-400 mb-1">Tipe</label>
-            <select name="type" class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2">
+            <select name="type" class="input-field text-sm rounded-lg px-3 py-2">
                 <option value="">Semua</option>
                 <option value="in" {{ ($filters['type'] ?? '') === 'in' ? 'selected' : '' }}>Masuk</option>
                 <option value="out" {{ ($filters['type'] ?? '') === 'out' ? 'selected' : '' }}>Keluar</option>
@@ -31,55 +31,54 @@
         <div>
             <label class="block text-xs text-gray-400 mb-1">Dari</label>
             <input type="date" name="date_from" value="{{ $filters['date_from'] ?? '' }}"
-                class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2">
+                class="input-field text-sm rounded-lg px-3 py-2">
         </div>
         <div>
             <label class="block text-xs text-gray-400 mb-1">Sampai</label>
             <input type="date" name="date_to" value="{{ $filters['date_to'] ?? '' }}"
-                class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2">
+                class="input-field text-sm rounded-lg px-3 py-2">
         </div>
-        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg">Tampilkan</button>
         <a href="{{ request()->fullUrlWithQuery(['export' => 'excel']) }}" target="_blank"
-           class="flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-all">
+           class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-all w-full sm:w-auto h-[38px] self-end mb-[2px]">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
             </svg>
             Export Excel
         </a>
-    </form>
+    </x-search-filter>
 </div>
 
 <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
     <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left">
-            <thead class="border-b border-gray-700">
+        <table class="table-standard">
+            <thead class="table-head">
                 <tr>
-                    <th class="px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase">Referensi</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Produk</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Tipe</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase text-center">Qty</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Petugas</th>
-                    <th class="px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase">Tanggal</th>
+                    <th class="table-cell-head">Referensi</th>
+                    <th class="table-cell-head">Produk</th>
+                    <th class="table-cell-head">Tipe</th>
+                    <th class="table-cell-head text-center">Qty</th>
+                    <th class="table-cell-head">Petugas</th>
+                    <th class="table-cell-head">Tanggal</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-700">
                 @forelse($report['transactions'] as $tx)
-                <tr class="hover:bg-gray-750 transition-colors">
-                    <td class="px-5 py-3.5 font-mono text-xs text-gray-300">#{{ $tx->id }}</td>
-                    <td class="px-4 py-3.5">
+                <tr class="table-row">
+                    <td class="table-cell font-mono text-xs text-gray-300">#{{ $tx->id }}</td>
+                    <td class="table-cell">
                         <p class="text-white">{{ $tx->product_name }}</p>
                         <p class="text-xs text-gray-400">{{ $tx->product_sku }}</p>
                     </td>
-                    <td class="px-4 py-3.5">
+                    <td class="table-cell">
                         <span class="px-2.5 py-1 text-xs font-medium rounded-full {{ $tx->type === 'Masuk' ? 'stock-badge-in' : 'stock-badge-out' }}">
                             {{ $tx->type }}
                         </span>
                     </td>
-                    <td class="px-4 py-3.5 text-center font-semibold {{ $tx->type === 'Masuk' ? 'text-green-400' : 'text-red-400' }}">
+                    <td class="table-cell text-center font-semibold {{ $tx->type === 'Masuk' ? 'text-green-400' : 'text-red-400' }}">
                         {{ $tx->type === 'Masuk' ? '+' : '-' }}{{ number_format($tx->quantity) }}
                     </td>
-                    <td class="px-4 py-3.5 text-gray-300">{{ $tx->user_name }}</td>
-                    <td class="px-4 py-3.5 text-gray-400">{{ \Carbon\Carbon::parse($tx->date)->format('d M Y') }}</td>
+                    <td class="table-cell text-gray-300">{{ $tx->user_name }}</td>
+                    <td class="table-cell text-gray-400">{{ \Carbon\Carbon::parse($tx->date)->format('d M Y') }}</td>
                 </tr>
                 @empty
                 <x-table-empty :colspan="6" message="Tidak ada data transaksi" />

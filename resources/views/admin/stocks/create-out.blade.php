@@ -18,8 +18,10 @@
                     <option value="{{ $product->id }}"
                         data-stock="{{ $product->stock }}" data-unit="{{ $product->unit }}"
                         data-price="{{ $product->sell_price }}" data-sku="{{ $product->code }}"
-                        {{ old('product_id', request('product_id')) == $product->id ? 'selected' : '' }}>
+                        {{ old('product_id', request('product_id')) == $product->id ? 'selected' : '' }}
+                        {{ $product->has_pending_transaction ? 'disabled' : '' }}>
                         [{{ $product->code }}] {{ $product->name }} — Stok: {{ $product->stock }} {{ $product->unit }}
+                        {{ $product->has_pending_transaction ? '(Pending)' : '' }}
                     </option>
                     @endforeach
                 </select>
@@ -35,7 +37,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Jumlah <span class="text-red-400">*</span></label>
-                    <input type="number" name="quantity" value="{{ old('quantity', 1) }}" min="1" required id="quantity-input"
+                    <input type="number" name="quantity" value="{{ old('quantity') }}" min="1" required id="quantity-input" placeholder="0"
                         class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
@@ -81,54 +83,5 @@
 </div>
 @endsection
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const productSelect = document.getElementById('product-select');
-    const productInfo = document.getElementById('product-info');
-    const currentStock = document.getElementById('current-stock');
-    const unitPriceHidden = document.getElementById('unit-price-hidden');
-    const unitPriceDisplay = document.getElementById('unit-price-display');
 
-    function updateProductDetails() {
-        const selectedOption = productSelect.options[productSelect.selectedIndex];
-        
-        if (selectedOption.value) {
-            const stock = selectedOption.getAttribute('data-stock');
-            const unit = selectedOption.getAttribute('data-unit');
-            const price = parseInt(selectedOption.getAttribute('data-price')) || 0;
-            const sku = selectedOption.getAttribute('data-sku');
-
-            currentStock.textContent = `${stock} ${unit}`;
-            productInfo.classList.remove('hidden');
-            
-            // Batasi maksimal jumlah keluar sesuai stok yang ada
-            document.getElementById('quantity-input').max = stock;
-            
-            unitPriceHidden.value = price;
-            unitPriceDisplay.value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
-            
-            const refInput = document.getElementById('reference-input');
-            if(refInput && sku) {
-                refInput.value = sku;
-            }
-        } else {
-            productInfo.classList.add('hidden');
-            document.getElementById('quantity-input').removeAttribute('max');
-            unitPriceHidden.value = '';
-            unitPriceDisplay.value = '';
-            
-            const refInput = document.getElementById('reference-input');
-            if(refInput) refInput.value = '';
-        }
-    }
-
-    productSelect.addEventListener('change', updateProductDetails);
-    
-    if (productSelect.value) {
-        updateProductDetails();
-    }
-});
-</script>
-@endpush
 

@@ -15,7 +15,7 @@
             <div>
                 <label for="app_name" class="block text-sm font-medium text-gray-300 mb-1.5">Nama Aplikasi <span class="text-red-400">*</span></label>
                 <input type="text" name="app_name" id="app_name" value="{{ old('app_name', $settings['app_name'] ?? 'Stockify') }}" required
-                    class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
+                    class="input-field w-full text-sm rounded-lg px-3 py-2.5"
                     placeholder="Contoh: GudangKu">
                 @error('app_name')
                     <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
@@ -101,29 +101,29 @@
                     <div class="flex flex-col xl:flex-row gap-3 items-start xl:items-end">
                         <div class="w-full xl:w-1/4">
                             <label class="block text-sm font-medium text-gray-300 mb-1.5">Tipe Pemilihan</label>
-                            <select name="delete_type" id="delete_type" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                            <select name="delete_type" id="delete_type" class="input-field w-full text-sm rounded-lg px-3 py-2.5">
                                 <option value="date_range">Rentang Tanggal</option>
                                 <option value="exact_month">Bulan Spesifik</option>
                             </select>
                         </div>
                         <div class="flex-1 w-full" id="container_date">
-                            <div class="flex flex-col sm:flex-row gap-2">
-                                <div class="flex-1 w-full">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div class="w-full">
                                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Dari Tanggal</label>
                                     <input type="date" name="start_date" id="start_date" max="{{ date('Y-m-d') }}" required
-                                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                        class="input-field w-full text-sm rounded-lg px-3 py-2.5">
                                 </div>
-                                <div class="flex-1 w-full">
+                                <div class="w-full">
                                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Sampai Tanggal</label>
                                     <input type="date" name="end_date" id="end_date" max="{{ date('Y-m-d') }}" required
-                                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                        class="input-field w-full text-sm rounded-lg px-3 py-2.5">
                                 </div>
                             </div>
                         </div>
                         <div class="flex-1 w-full hidden" id="container_month">
                             <label class="block text-sm font-medium text-gray-300 mb-1.5">Pilih Bulan</label>
                             <input type="month" name="specific_month" id="specific_month" max="{{ date('Y-m') }}"
-                                class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                class="input-field w-full text-sm rounded-lg px-3 py-2.5">
                         </div>
                         <button type="submit" class="w-full xl:w-auto px-5 py-2.5 bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-red-900/20 whitespace-nowrap mt-3 xl:mt-0">
                             Kompres & Hapus Data
@@ -144,29 +144,29 @@
                     <div class="flex flex-col xl:flex-row gap-3 items-start xl:items-end">
                         <div class="w-full xl:w-1/4">
                             <label class="block text-sm font-medium text-gray-300 mb-1.5">Tipe Pemilihan</label>
-                            <select name="activity_delete_type" id="activity_delete_type" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                            <select name="activity_delete_type" id="activity_delete_type" class="input-field w-full text-sm rounded-lg px-3 py-2.5">
                                 <option value="date_range">Rentang Tanggal</option>
                                 <option value="exact_month">Bulan Spesifik</option>
                             </select>
                         </div>
                         <div class="flex-1 w-full" id="activity_container_date">
-                            <div class="flex flex-col sm:flex-row gap-2">
-                                <div class="flex-1 w-full">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div class="w-full">
                                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Dari Tanggal</label>
                                     <input type="date" name="activity_start_date" id="activity_start_date" max="{{ date('Y-m-d') }}" required
-                                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                        class="input-field w-full text-sm rounded-lg px-3 py-2.5">
                                 </div>
-                                <div class="flex-1 w-full">
+                                <div class="w-full">
                                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Sampai Tanggal</label>
                                     <input type="date" name="activity_end_date" id="activity_end_date" max="{{ date('Y-m-d') }}" required
-                                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                        class="input-field w-full text-sm rounded-lg px-3 py-2.5">
                                 </div>
                             </div>
                         </div>
                         <div class="flex-1 w-full hidden" id="activity_container_month">
                             <label class="block text-sm font-medium text-gray-300 mb-1.5">Pilih Bulan</label>
                             <input type="month" name="activity_specific_month" id="activity_specific_month" max="{{ date('Y-m') }}"
-                                class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                class="input-field w-full text-sm rounded-lg px-3 py-2.5">
                         </div>
                         <button type="submit" class="w-full xl:w-auto px-5 py-2.5 bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-red-900/20 whitespace-nowrap mt-3 xl:mt-0">
                             Hapus Data
@@ -179,78 +179,4 @@
 </div>
 @endsection
 
-@push('scripts')
-<script>
-    document.getElementById('unlock-danger-zone').addEventListener('click', function() {
-        if (confirm('PERINGATAN: Area ini berisi menu untuk menghapus data sistem secara permanen. Apakah Anda yakin ingin membukanya?')) {
-            document.getElementById('danger-zone-content').classList.remove('hidden');
-            this.classList.add('hidden');
-        }
-    });
 
-    document.getElementById('app_logo').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('logo-preview');
-                const defaultIcon = document.getElementById('default-logo-icon');
-                
-                preview.src = e.target.result;
-                preview.classList.remove('hidden');
-                
-                if (defaultIcon) {
-                    defaultIcon.classList.add('hidden');
-                }
-            }
-            reader.readAsDataURL(file);
-        }
-    });
-
-    document.getElementById('delete_type').addEventListener('change', function(e) {
-        const type = e.target.value;
-        const dateContainer = document.getElementById('container_date');
-        const monthContainer = document.getElementById('container_month');
-        const startDate = document.getElementById('start_date');
-        const endDate = document.getElementById('end_date');
-        const specificMonth = document.getElementById('specific_month');
-
-        if (type === 'date_range') {
-            dateContainer.classList.remove('hidden');
-            monthContainer.classList.add('hidden');
-            startDate.required = true;
-            endDate.required = true;
-            specificMonth.required = false;
-        } else {
-            dateContainer.classList.add('hidden');
-            monthContainer.classList.remove('hidden');
-            startDate.required = false;
-            endDate.required = false;
-            specificMonth.required = true;
-        }
-    });
-
-    document.getElementById('activity_delete_type').addEventListener('change', function(e) {
-        const type = e.target.value;
-        const dateContainer = document.getElementById('activity_container_date');
-        const monthContainer = document.getElementById('activity_container_month');
-        const startDate = document.getElementById('activity_start_date');
-        const endDate = document.getElementById('activity_end_date');
-        const specificMonth = document.getElementById('activity_specific_month');
-
-        if (type === 'date_range') {
-            dateContainer.classList.remove('hidden');
-            monthContainer.classList.add('hidden');
-            startDate.required = true;
-            endDate.required = true;
-            specificMonth.required = false;
-        } else {
-            dateContainer.classList.add('hidden');
-            monthContainer.classList.remove('hidden');
-            startDate.required = false;
-            endDate.required = false;
-            specificMonth.required = true;
-        }
-    });
-</script>
-@endpush

@@ -43,6 +43,7 @@ class Products extends Model
     public function getUnitAttribute() { return 'pcs'; }
     public function getIsActiveAttribute() { return true; }
     public function getStockStatusLabelAttribute() { return $this->stock <= 0 ? 'Habis' : ($this->stock <= $this->minimum_stock ? 'Menipis' : 'Aman'); }
+    public function getHasPendingTransactionAttribute() { return $this->stockTransactions->contains('status', Stock_transaction::STATUS_PENDING); }
 
     public function category()
     {
