@@ -15,53 +15,59 @@
 @endphp
 
 @if(!$isStaff)
-<div class="flex flex-wrap gap-3 mb-5">
+<div class="flex flex-col sm:flex-row flex-wrap gap-3 mb-5">
     <a href="{{ route("{$prefix}.stocks.in.create") }}"
-       class="flex items-center gap-2 px-4 py-2.5 bg-green-700 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-all">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+       class="flex-1 sm:flex-none justify-center items-center gap-2 px-4 py-2.5 bg-green-700 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-all flex">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4"/>
         </svg>
-        Barang Masuk
+        <span class="whitespace-nowrap">Barang Masuk</span>
     </a>
     <a href="{{ route("{$prefix}.stocks.out.create") }}"
-       class="flex items-center gap-2 px-4 py-2.5 bg-red-700 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-all">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+       class="flex-1 sm:flex-none justify-center items-center gap-2 px-4 py-2.5 bg-red-700 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-all flex">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8V20m0 0l4-4m-4 4l-4-4"/>
         </svg>
-        Barang Keluar
+        <span class="whitespace-nowrap">Barang Keluar</span>
     </a>
     <a href="{{ route("{$prefix}.stocks.opname.index") }}"
-       class="flex items-center gap-2 px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-all">
-        Stock Opname
+       class="flex-1 sm:flex-none justify-center items-center gap-2 px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-all flex">
+        <span class="whitespace-nowrap">Stock Opname</span>
     </a>
 </div>
 @endif
 
 {{-- Filter --}}
 <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-5">
-    <form method="GET" class="flex flex-wrap gap-3">
-        <input type="text" name="search" value="{{ $filters['search'] ?? '' }}"
-            placeholder="Cari no. referensi / produk..."
-            class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 min-w-48">
-        <select name="type" class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
+    <form method="GET" class="flex flex-col md:flex-row flex-wrap gap-3">
+        <div class="flex-1 w-full md:w-auto min-w-[200px]">
+            <input type="text" name="search" value="{{ $filters['search'] ?? '' }}"
+                placeholder="Cari no. referensi / produk..."
+                class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <select name="type" class="w-full md:w-auto bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
             <option value="">Semua Tipe</option>
             <option value="in" {{ ($filters['type'] ?? '') === 'in' ? 'selected' : '' }}>Barang Masuk</option>
             <option value="out" {{ ($filters['type'] ?? '') === 'out' ? 'selected' : '' }}>Barang Keluar</option>
         </select>
-        <select name="status" class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
+        <select name="status" class="w-full md:w-auto bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
             <option value="">Semua Status</option>
             <option value="pending" {{ ($filters['status'] ?? '') === 'pending' ? 'selected' : '' }}>Menunggu</option>
             <option value="confirmed" {{ ($filters['status'] ?? '') === 'confirmed' ? 'selected' : '' }}>Dikonfirmasi</option>
             <option value="cancelled" {{ ($filters['status'] ?? '') === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
         </select>
-        <input type="date" name="date_from" value="{{ $filters['date_from'] ?? '' }}"
-            class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
-        <input type="date" name="date_to" value="{{ $filters['date_to'] ?? '' }}"
-            class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500">
-        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-all">Filter</button>
-        @if(array_filter($filters))
-        <a href="{{ route("{$prefix}.stocks.index") }}" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-all">Reset</a>
-        @endif
+        <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+            <input type="date" name="date_from" value="{{ $filters['date_from'] ?? '' }}"
+                class="w-full sm:flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+            <input type="date" name="date_to" value="{{ $filters['date_to'] ?? '' }}"
+                class="w-full sm:flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div class="flex flex-wrap gap-2 w-full md:w-auto">
+            <button type="submit" class="flex-1 sm:flex-none px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-all">Filter</button>
+            @if(array_filter($filters))
+            <a href="{{ route("{$prefix}.stocks.index") }}" class="flex-1 sm:flex-none text-center px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-all">Reset</a>
+            @endif
+        </div>
     </form>
 </div>
 

@@ -33,7 +33,7 @@
                 <p class="text-blue-300">Stok saat ini: <span id="current-stock" class="font-bold text-white"></span></p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Jumlah <span class="text-red-400">*</span></label>
                     <input type="number" name="quantity" value="{{ old('quantity', 1) }}" min="1" required id="quantity-input"
@@ -47,7 +47,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Supplier</label>
                     <select name="supplier_id" id="supplier-select" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
@@ -78,7 +78,7 @@
                 <p><strong>Catatan:</strong> Jika Anda mengubah <b>Supplier</b> atau <b>No. Referensi / SKU</b>, sistem akan otomatis membuat salinan produk baru untuk transaksi ini. Pastikan Anda menggunakan kode SKU yang <b>baru dan unik</b> (belum pernah ada) jika mengganti Supplier.</p>
             </div>
 
-            <div class="flex gap-3 pt-2">
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
                 <a href="{{ route("{$prefix}.stocks.index") }}"
                    class="flex-1 py-2.5 text-center bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-all">Batal</a>
                 <button type="submit"

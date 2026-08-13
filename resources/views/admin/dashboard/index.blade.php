@@ -93,38 +93,38 @@
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
     {{-- Chart --}}
     <div class="xl:col-span-2 bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl flex flex-col">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-            <div class="flex-1 flex flex-col sm:flex-row sm:items-center gap-4">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-6 gap-4 w-full">
+            <div class="flex-1 flex flex-col sm:flex-row sm:items-center gap-4 w-full lg:w-auto">
                 <div>
                     <h3 class="text-base font-semibold text-white" id="mainChartTitle">Grafik Transaksi</h3>
                     <p class="text-xs text-gray-400" id="mainChartSubtitle">{{ $stats['transaction_chart']['period_formatted'] }}</p>
                 </div>
                 
                 {{-- Month Filter --}}
-                <form method="GET" action="{{ route('admin.dashboard') }}" class="sm:ml-4" id="transactionChartFilter">
+                <form method="GET" action="{{ route('admin.dashboard') }}" class="sm:ml-4 w-full sm:w-auto" id="transactionChartFilter">
                     <input type="month" name="period" value="{{ $stats['transaction_chart']['period'] }}" 
                            onchange="this.form.submit()" 
-                           class="bg-gray-900 border border-gray-700 text-gray-300 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1.5 cursor-pointer">
+                           class="w-full sm:w-auto bg-gray-900 border border-gray-700 text-gray-300 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1.5 cursor-pointer">
                 </form>
             </div>
             
-            <div class="flex items-center gap-3">
+            <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
                 <div class="flex bg-gray-900/50 p-1 rounded-lg border border-gray-700/50">
-                    <button type="button" id="btnShowTransaction" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all bg-blue-500/20 text-blue-400">
+                    <button type="button" id="btnShowTransaction" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all bg-blue-500/20 text-blue-400 whitespace-nowrap">
                         Transaksi
                     </button>
-                    <button type="button" id="btnShowCategory" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all text-gray-400 hover:text-gray-300">
+                    <button type="button" id="btnShowCategory" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all text-gray-400 hover:text-gray-300 whitespace-nowrap">
                         Stok Kategori
                     </button>
                 </div>
 
                 {{-- Legend for Transaction Chart --}}
-                <div id="transactionLegend" class="flex items-center gap-4 text-xs ml-2 hidden sm:flex">
+                <div id="transactionLegend" class="flex flex-wrap items-center gap-4 text-xs ml-0 sm:ml-2">
                     <span class="flex items-center gap-1.5 text-gray-400">
-                        <span class="w-3 h-3 bg-blue-500 rounded-full inline-block"></span> Masuk
+                        <span class="w-3 h-3 bg-blue-500 rounded-full inline-block shrink-0"></span> Masuk
                     </span>
                     <span class="flex items-center gap-1.5 text-gray-400">
-                        <span class="w-3 h-3 bg-red-500 rounded-full inline-block"></span> Keluar
+                        <span class="w-3 h-3 bg-red-500 rounded-full inline-block shrink-0"></span> Keluar
                     </span>
                 </div>
             </div>

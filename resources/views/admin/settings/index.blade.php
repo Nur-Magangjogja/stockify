@@ -107,13 +107,13 @@
                             </select>
                         </div>
                         <div class="flex-1 w-full" id="container_date">
-                            <div class="flex flex-row gap-2">
-                                <div class="flex-1">
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <div class="flex-1 w-full">
                                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Dari Tanggal</label>
                                     <input type="date" name="start_date" id="start_date" max="{{ date('Y-m-d') }}" required
                                         class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
                                 </div>
-                                <div class="flex-1">
+                                <div class="flex-1 w-full">
                                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Sampai Tanggal</label>
                                     <input type="date" name="end_date" id="end_date" max="{{ date('Y-m-d') }}" required
                                         class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
@@ -150,13 +150,13 @@
                             </select>
                         </div>
                         <div class="flex-1 w-full" id="activity_container_date">
-                            <div class="flex flex-row gap-2">
-                                <div class="flex-1">
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <div class="flex-1 w-full">
                                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Dari Tanggal</label>
                                     <input type="date" name="activity_start_date" id="activity_start_date" max="{{ date('Y-m-d') }}" required
                                         class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
                                 </div>
-                                <div class="flex-1">
+                                <div class="flex-1 w-full">
                                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Sampai Tanggal</label>
                                     <input type="date" name="activity_end_date" id="activity_end_date" max="{{ date('Y-m-d') }}" required
                                         class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">

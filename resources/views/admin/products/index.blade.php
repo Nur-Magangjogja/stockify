@@ -6,24 +6,24 @@
 @section('content')
 @php $prefix = auth()->user()->isAdmin() ? 'admin' : 'manager'; @endphp
 {{-- Header --}}
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
     <div class="flex items-center gap-2">
         <span class="text-sm text-gray-400">{{ $products->total() }} produk ditemukan</span>
     </div>
-    <div class="flex gap-2">
+    <div class="flex flex-col sm:flex-row flex-wrap gap-2 w-full md:w-auto">
         <button onclick="document.getElementById('importModal').classList.remove('hidden')"
-           class="flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-all">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           class="flex-1 sm:flex-none justify-center items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-all flex">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
             </svg>
-            Import Excel
+            <span class="whitespace-nowrap">Import Excel</span>
         </button>
         <a href="{{ route("{$prefix}.products.create") }}"
-           class="flex items-center gap-2 px-4 py-2.5 btn-primary text-white text-sm font-medium rounded-lg">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+           class="flex-1 sm:flex-none justify-center items-center gap-2 px-4 py-2.5 btn-primary text-white text-sm font-medium rounded-lg flex">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
-            Tambah Produk
+            <span class="whitespace-nowrap">Tambah Produk</span>
         </a>
     </div>
 </div>
@@ -58,13 +58,13 @@
 
 {{-- Filter --}}
 <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-5">
-    <form method="GET" action="{{ request()->url() }}" class="flex flex-wrap gap-3">
-        <div class="flex-1 min-w-48">
+    <form method="GET" action="{{ request()->url() }}" class="flex flex-col md:flex-row flex-wrap gap-3">
+        <div class="flex-1 w-full md:w-auto min-w-[200px]">
             <input type="text" name="search" value="{{ $filters['search'] ?? '' }}"
                 placeholder="Cari nama, kode produk..."
                 class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
         </div>
-        <select name="category_id" class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+        <select name="category_id" class="w-full md:w-auto bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
             <option value="">Semua Kategori</option>
             @foreach($categories as $category)
             <option value="{{ $category->id }}" {{ ($filters['category_id'] ?? '') == $category->id ? 'selected' : '' }}>
@@ -72,15 +72,17 @@
             </option>
             @endforeach
         </select>
-        <select name="stock_status" class="bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+        <select name="stock_status" class="w-full md:w-auto bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
             <option value="">Semua Status Stok</option>
             <option value="low" {{ ($filters['stock_status'] ?? '') === 'low' ? 'selected' : '' }}>Stok Menipis</option>
             <option value="out" {{ ($filters['stock_status'] ?? '') === 'out' ? 'selected' : '' }}>Stok Habis</option>
         </select>
-        <button type="submit" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-all">Filter</button>
-        @if(array_filter($filters))
-        <a href="{{ request()->url() }}" class="px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-all">Reset</a>
-        @endif
+        <div class="flex flex-wrap gap-2 w-full md:w-auto">
+            <button type="submit" class="flex-1 sm:flex-none px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-all">Filter</button>
+            @if(array_filter($filters))
+            <a href="{{ request()->url() }}" class="flex-1 sm:flex-none text-center px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-all">Reset</a>
+            @endif
+        </div>
     </form>
 </div>
 

@@ -32,7 +32,7 @@
                 <p class="text-amber-300">Stok tersedia: <span id="current-stock" class="font-bold text-white"></span></p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Jumlah <span class="text-red-400">*</span></label>
                     <input type="number" name="quantity" value="{{ old('quantity', 1) }}" min="1" required id="quantity-input"
@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">No. Referensi</label>
                     <input type="text" name="reference_number" id="reference-input" value="{{ old('reference_number') }}" readonly
@@ -67,7 +67,7 @@
                     placeholder="Tujuan / catatan pengeluaran (opsional)">{{ old('notes') }}</textarea>
             </div>
 
-            <div class="flex gap-3 pt-2">
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
                 <a href="{{ route("{$prefix}.stocks.index") }}"
                    class="flex-1 py-2.5 text-center bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-all">Batal</a>
                 <button type="submit"
