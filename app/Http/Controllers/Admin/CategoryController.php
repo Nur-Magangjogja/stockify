@@ -10,10 +10,11 @@ class CategoryController extends Controller
 {
     public function __construct(protected CategoriesService $categoryService) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $categories = $this->categoryService->getAllCategoriesPaginated(15);
-        return view('admin.categories.index', compact('categories'));
+        $filters = $request->only(['search_category', 'search_product']);
+        $categories = $this->categoryService->getAllCategoriesPaginated(15, $filters);
+        return view('admin.categories.index', compact('categories', 'filters'));
     }
 
     public function create()

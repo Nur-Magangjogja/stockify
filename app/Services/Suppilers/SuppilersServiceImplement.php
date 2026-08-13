@@ -40,9 +40,9 @@ class SuppilersServiceImplement extends Service implements SuppilersService{
         return $this->mainRepository->getAllSuppliers($activeOnly);
     }
 
-    public function getAllSuppliersPaginated(int $perPage = 15)
+    public function getAllSuppliersPaginated(int $perPage = 15, string $search = null)
     {
-        return $this->mainRepository->getAllSuppliersPaginated($perPage);
+        return $this->mainRepository->getAllSuppliersPaginated($perPage, false, $search);
     }
 
     public function getSupplier(int $id)

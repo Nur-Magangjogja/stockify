@@ -35,9 +35,17 @@ class SuppilersRepositoryImplement extends Eloquent implements SuppilersReposito
         return $this->model->orderBy('name')->get();
     }
 
-    public function getAllSuppliersPaginated(int $perPage = 15, bool $activeOnly = false)
+    public function getAllSuppliersPaginated(int $perPage = 15, bool $activeOnly = false, string $search = null)
     {
-        return $this->model->orderBy('name')->paginate($perPage);
+        $query = $this->model->orderBy('name');
+        
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+        }
+        
+        return $query->paginate($perPage)->appends(['search' => $search]);
     }
 
     public function getSupplier(int $id): Suppilers

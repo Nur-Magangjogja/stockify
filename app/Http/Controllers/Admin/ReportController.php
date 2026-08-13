@@ -27,11 +27,16 @@ class ReportController extends Controller
     {
         $filters    = $request->only(['category_id', 'stock_status']);
         $categories = $this->categoryService->getAllCategories(true);
-        $report     = $this->reportService->getStockSummary($filters);
+        
+        $isExport = $request->get('export') === 'excel';
+        $report   = $this->reportService->getStockSummary($filters, !$isExport);
 
-        if ($request->get('export') === 'excel') {
+        if ($isExport) {
             return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\StockExport($report), 'laporan-stok-' . date('Y-m-d') . '.xlsx');
         }
+
+        // Append query strings to pagination links
+        $report['products']->appends($request->query());
 
         return view('admin.reports.stock', compact('report', 'categories', 'filters'));
     }
@@ -39,11 +44,16 @@ class ReportController extends Controller
     public function transactionReport(Request $request)
     {
         $filters = $request->only(['type', 'date_from', 'date_to', 'product_id']);
-        $report  = $this->reportService->getTransactionReport($filters);
+        
+        $isExport = $request->get('export') === 'excel';
+        $report  = $this->reportService->getTransactionReport($filters, !$isExport);
 
-        if ($request->get('export') === 'excel') {
+        if ($isExport) {
             return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\TransactionExport($report), 'laporan-transaksi-' . date('Y-m-d') . '.xlsx');
         }
+
+        // Append query strings to pagination links
+        $report['transactions']->appends($request->query());
 
         return view('admin.reports.transactions', compact('report', 'filters'));
     }

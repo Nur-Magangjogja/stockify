@@ -61,4 +61,13 @@ interface StockTransactionService
      * @return array
      */
     public function getDashboardStats(): array;
+
+    /**
+     * Compress transaction history into Saldo Awal.
+     *
+     * @param string $mode 'range' or 'month'
+     * @param string|array $value Array [start, end] or Month (Y-m)
+     * @return void
+     */
+    public function resetTransactionHistory(string $mode, string|array $value): void;
 }

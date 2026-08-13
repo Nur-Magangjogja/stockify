@@ -41,9 +41,25 @@ class CategoriesServiceImplement extends Service implements CategoriesService{
         return Categories::orderBy('name')->get();
     }
 
-    public function getAllCategoriesPaginated(int $perPage = 15)
+    public function getAllCategoriesPaginated(int $perPage = 15, array $filters = [])
     {
-        return Categories::with('products')->orderBy('name')->paginate($perPage);
+        $query = Categories::with(['products' => function($q) use ($filters) {
+            if (!empty($filters['search_product'])) {
+                $q->where('name', 'like', '%' . $filters['search_product'] . '%');
+            }
+        }])->orderBy('name');
+        
+        if (!empty($filters['search_category'])) {
+            $query->where('name', 'like', '%' . $filters['search_category'] . '%');
+        }
+        
+        if (!empty($filters['search_product'])) {
+            $query->whereHas('products', function($q) use ($filters) {
+                $q->where('name', 'like', '%' . $filters['search_product'] . '%');
+            });
+        }
+        
+        return $query->paginate($perPage)->appends($filters);
     }
 
     public function getCategory(int $id)

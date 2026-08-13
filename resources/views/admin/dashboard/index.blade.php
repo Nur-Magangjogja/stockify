@@ -8,7 +8,7 @@
 <x-welcome-banner />
 
 {{-- Stats Cards --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
 
     <x-stat-card color="blue" label="Total Produk"
         :value="number_format($stats['total_products'])"
@@ -17,6 +17,17 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+            </svg>
+        </x-slot:icon>
+    </x-stat-card>
+
+    <x-stat-card color="purple" label="Total Stok"
+        :value="number_format($stats['total_stock_qty'])"
+        sub="Jumlah item fisik secara keseluruhan">
+        <x-slot:icon>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
             </svg>
         </x-slot:icon>
     </x-stat-card>
@@ -47,6 +58,16 @@
         </x-slot:icon>
     </x-stat-card>
 
+    <x-stat-card color="indigo" label="Total Transaksi"
+        :value="number_format($stats['total_transactions'])"
+        sub="Total transaksi tercatat dalam sistem">
+        <x-slot:icon>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+        </x-slot:icon>
+    </x-stat-card>
+
     <x-stat-card color="amber" label="Masuk Hari Ini"
         :value="$stats['today_in']"
         :sub="$stats['month_in_qty'] . ' unit bulan ini'">
@@ -71,26 +92,85 @@
 
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
     {{-- Chart --}}
-    <div class="xl:col-span-2 bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h3 class="text-base font-semibold text-white">Grafik Transaksi</h3>
-                <p class="text-xs text-gray-400">{{ now()->translatedFormat('F Y') }}</p>
+    <div class="xl:col-span-2 bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-2xl flex flex-col">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+            <div class="flex-1 flex flex-col sm:flex-row sm:items-center gap-4">
+                <div>
+                    <h3 class="text-base font-semibold text-white" id="mainChartTitle">Grafik Transaksi</h3>
+                    <p class="text-xs text-gray-400" id="mainChartSubtitle">{{ $stats['transaction_chart']['period_formatted'] }}</p>
+                </div>
+                
+                {{-- Month Filter --}}
+                <form method="GET" action="{{ route('admin.dashboard') }}" class="sm:ml-4" id="transactionChartFilter">
+                    <input type="month" name="period" value="{{ $stats['transaction_chart']['period'] }}" 
+                           onchange="this.form.submit()" 
+                           class="bg-gray-900 border border-gray-700 text-gray-300 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1.5 cursor-pointer">
+                </form>
             </div>
-            <div class="flex items-center gap-4 text-xs">
-                <span class="flex items-center gap-1.5 text-gray-400">
-                    <span class="w-3 h-3 bg-blue-500 rounded-full inline-block"></span> Masuk
-                </span>
-                <span class="flex items-center gap-1.5 text-gray-400">
-                    <span class="w-3 h-3 bg-red-500 rounded-full inline-block"></span> Keluar
-                </span>
+            
+            <div class="flex items-center gap-3">
+                <div class="flex bg-gray-900/50 p-1 rounded-lg border border-gray-700/50">
+                    <button type="button" id="btnShowTransaction" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all bg-blue-500/20 text-blue-400">
+                        Transaksi
+                    </button>
+                    <button type="button" id="btnShowCategory" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all text-gray-400 hover:text-gray-300">
+                        Stok Kategori
+                    </button>
+                </div>
+
+                {{-- Legend for Transaction Chart --}}
+                <div id="transactionLegend" class="flex items-center gap-4 text-xs ml-2 hidden sm:flex">
+                    <span class="flex items-center gap-1.5 text-gray-400">
+                        <span class="w-3 h-3 bg-blue-500 rounded-full inline-block"></span> Masuk
+                    </span>
+                    <span class="flex items-center gap-1.5 text-gray-400">
+                        <span class="w-3 h-3 bg-red-500 rounded-full inline-block"></span> Keluar
+                    </span>
+                </div>
             </div>
         </div>
-        <canvas id="transactionChart" height="100" 
-                data-labels="{{ json_encode($stats['transaction_chart']['labels']) }}"
-                data-masuk="{{ json_encode($stats['transaction_chart']['masuk']) }}"
-                data-keluar="{{ json_encode($stats['transaction_chart']['keluar']) }}">
-        </canvas>
+
+        {{-- Chart Containers --}}
+        <div class="relative w-full flex-1 min-h-[400px] overflow-hidden flex flex-col">
+            {{-- Transaction Chart Container --}}
+            <div id="transactionChartContainer" class="w-full h-full flex-1" data-subtitle="{{ $stats['transaction_chart']['period_formatted'] }}">
+                <canvas id="transactionChart" 
+                        data-labels="{{ json_encode($stats['transaction_chart']['labels']) }}"
+                        data-masuk="{{ json_encode($stats['transaction_chart']['masuk']) }}"
+                        data-keluar="{{ json_encode($stats['transaction_chart']['keluar']) }}">
+                </canvas>
+            </div>
+            
+            {{-- Category Chart Container --}}
+            @php
+                $catLabels = [];
+                $catData = [];
+                $catNames = [];
+                
+                // Batasi data agar tidak merender ribuan bar yang menyebabkan canvas crash (maksimal 300 produk)
+                $safeChartData = !empty($stats['product_stock_chart']) ? array_slice($stats['product_stock_chart'], 0, 300) : [];
+                
+                foreach($safeChartData as $prod) {
+                    // Limit label length if too long
+                    $label = strlen($prod->product_name) > 20 ? substr($prod->product_name, 0, 20).'...' : $prod->product_name;
+                    $catLabels[] = $label;
+                    $catData[] = $prod->current_stock;
+                    $catNames[] = $prod->category_name;
+                }
+                
+                // Hitung lebar canvas, max 15000px agar tidak crash di browser
+                $canvasWidth = min(max(count($catLabels) * 40, 800), 15000); 
+            @endphp
+            <div id="categoryChartContainer" class="w-full h-full flex-1 overflow-x-auto hidden overflow-y-hidden pb-4 select-none scroll-smooth">
+                <div style="width: {{ $canvasWidth }}px; height: 400px;">
+                    <canvas id="categoryChart" 
+                            data-labels="{{ json_encode($catLabels) }}"
+                            data-stock="{{ json_encode($catData) }}"
+                            data-categories="{{ json_encode($catNames) }}">
+                    </canvas>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- Stok per Kategori --}}
@@ -100,7 +180,7 @@
             <a href="{{ route('admin.categories.index') }}" class="text-xs text-blue-400 hover:text-blue-300">Lihat semua</a>
         </div>
         @if(!empty($stats['stock_by_category']))
-        <div class="space-y-3">
+        <div class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
             @php $maxStock = max(array_column($stats['stock_by_category'], 'total_stock')); @endphp
             @foreach($stats['stock_by_category'] as $cat)
             <div>

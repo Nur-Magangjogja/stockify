@@ -14,17 +14,43 @@
 @endphp
 
 @if(!$isStaff)
-<form action="{{ route("{$prefix}.stocks.opname.store") }}" method="POST">
+<form id="opnameForm" action="{{ route("{$prefix}.stocks.opname.store") }}" method="POST">
     @csrf
+</form>
+
     <div class="bg-gray-800 border border-gray-700 rounded-xl p-5 mb-5">
-        <div class="grid gap-4 md:grid-cols-2">
+        <div class="grid gap-4 lg:grid-cols-3">
+            {{-- Kolom 1: Pencarian (GET Form) --}}
             <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1.5">Tanggal Opname</label>
-                <input type="date" name="opname_date" value="{{ old('opname_date', date('Y-m-d')) }}" required class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5">
+                <label class="block text-sm font-medium text-gray-300 mb-1.5">Pencarian</label>
+                <form method="GET" action="{{ request()->url() }}" class="flex gap-2">
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Cari produk..."
+                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+                    <button type="submit" class="px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-all">Cari</button>
+                    @if(request('search'))
+                    <a href="{{ request()->url() }}" class="px-3 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-all" title="Reset">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </a>
+                    @endif
+                </form>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1.5">Catatan</label>
-                <input type="text" name="notes" value="{{ old('notes') }}" placeholder="Opsional" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5">
+
+            {{-- Kolom 2 & 3: Tanggal & Catatan --}}
+            <div class="lg:col-span-2">
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1.5">Tanggal Opname</label>
+                        <input type="date" form="opnameForm" name="opname_date" value="{{ old('opname_date', date('Y-m-d')) }}" required class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1.5">Catatan <span class="text-red-500">*</span></label>
+                        <input type="text" form="opnameForm" name="notes" value="{{ old('notes') }}" placeholder="Wajib diisi" required class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5">
+                        @error('notes')
+                            <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -34,6 +60,8 @@
         <span class="text-sm">Mode Lihat Saja. Anda hanya dapat melihat stok sistem saat ini.</span>
     </div>
 @endif
+
+
 
     <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
         <div class="overflow-x-auto">
@@ -58,7 +86,7 @@
                         <td class="px-4 py-3 text-center text-gray-300">{{ $product->stock }}</td>
                         @if(!$isStaff)
                         <td class="px-4 py-3 text-center">
-                            <input type="number" name="stocks[{{ $product->id }}]" value="{{ old('stocks.' . $product->id, $product->stock) }}" min="0" required data-system="{{ $product->stock }}" class="w-24 bg-gray-900 border border-gray-600 text-center text-white rounded-lg px-2 py-1.5">
+                            <input type="number" form="opnameForm" name="stocks[{{ $product->id }}]" value="{{ old('stocks.' . $product->id, $product->stock) }}" min="0" max="4294967295" required data-system="{{ $product->stock }}" class="w-24 bg-gray-900 border border-gray-600 text-center text-white rounded-lg px-2 py-1.5">
                         </td>
                         <td class="px-4 py-3 text-center text-gray-400" data-difference>0</td>
                         @endif
@@ -69,13 +97,16 @@
                 </tbody>
             </table>
         </div>
-        @if($products->isNotEmpty() && !$isStaff)
-        <div class="flex justify-end px-5 py-4 border-t border-gray-700">
-            <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Simpan Penyesuaian</button>
-        </div>
-        @endif
+        <x-table-pagination :paginator="$products" />
     </div>
-@if(!$isStaff)
-</form>
-@endif
+
+    @if($products->isNotEmpty() && !$isStaff)
+    <div class="mt-6 flex justify-end">
+        <button type="submit" form="opnameForm" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-lg transition-all flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Simpan Penyesuaian
+        </button>
+    </div>
+    @endif
+    
 @endsection

@@ -70,10 +70,124 @@
         </div>
     </form>
 </div>
+
+<div class="max-w-2xl mt-12">
+    <div class="bg-red-900/10 border border-red-900/50 rounded-xl p-5">
+        <div class="flex justify-between items-center gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-red-500 mb-1">Manajemen Kelola Data (Danger Zone)</h3>
+                <p class="text-sm text-gray-400">Area ini berisi pengaturan khusus untuk menghapus data secara masal pada sistem.</p>
+            </div>
+            <button type="button" id="unlock-danger-zone" class="shrink-0 px-4 py-2 bg-red-600/20 hover:bg-red-600 text-red-500 hover:text-white text-sm font-medium rounded-lg border border-red-600/50 transition-all">
+                Buka Pengaturan
+            </button>
+        </div>
+
+        <div id="danger-zone-content" class="hidden mt-6 pt-6 border-t border-red-900/50 space-y-6">
+            <div class="bg-red-900/20 p-4 rounded-lg border border-red-800/50 flex gap-3 items-start">
+                <svg class="w-6 h-6 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <p class="text-sm text-red-400 leading-relaxed"><strong>PERINGATAN:</strong> Aksi di bawah ini bersifat permanen dan tidak dapat dibatalkan. Pastikan Anda telah melakukan *backup* atau ekspor laporan terlebih dahulu.</p>
+            </div>
+
+            <!-- Transaction Data Management -->
+            <div class="bg-gray-800 border border-red-900/50 rounded-xl p-5 space-y-6">
+                <div>
+                    <h3 class="text-lg font-medium text-white mb-1">Manajemen Data Transaksi</h3>
+                    <p class="text-sm text-gray-400">Hapus riwayat transaksi stok lama untuk meringankan performa database. Sistem akan otomatis meringkas sisa stok menjadi transaksi "Saldo Awal" agar jumlah stok saat ini tetap akurat.</p>
+                </div>
+
+                <form action="{{ route('admin.settings.reset-transactions') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus dan mengkompres data transaksi pada periode ini? Proses ini tidak dapat dibatalkan.')">
+                    @csrf
+                    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-end">
+                        <div class="w-full sm:w-1/3">
+                            <label class="block text-sm font-medium text-gray-300 mb-1.5">Tipe Pemilihan</label>
+                            <select name="delete_type" id="delete_type" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                <option value="date_range">Rentang Tanggal</option>
+                                <option value="exact_month">Bulan Spesifik</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 w-full" id="container_date">
+                            <div class="flex flex-row gap-2">
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-gray-300 mb-1.5">Dari Tanggal</label>
+                                    <input type="date" name="start_date" id="start_date" max="{{ date('Y-m-d') }}" required
+                                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-gray-300 mb-1.5">Sampai Tanggal</label>
+                                    <input type="date" name="end_date" id="end_date" max="{{ date('Y-m-d') }}" required
+                                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 w-full hidden" id="container_month">
+                            <label class="block text-sm font-medium text-gray-300 mb-1.5">Pilih Bulan</label>
+                            <input type="month" name="specific_month" id="specific_month" max="{{ date('Y-m') }}"
+                                class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-red-900/20 whitespace-nowrap mt-3 sm:mt-0">
+                            Kompres & Hapus Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Activity Data Management -->
+            <div class="bg-gray-800 border border-red-900/50 rounded-xl p-5 space-y-6">
+                <div>
+                    <h3 class="text-lg font-medium text-white mb-1">Manajemen Data Aktivitas (Log Pengguna)</h3>
+                    <p class="text-sm text-gray-400">Hapus riwayat aktivitas atau log aksi pengguna pada sistem (seperti log pembuatan produk, login, dll) untuk meringankan performa database.</p>
+                </div>
+
+                <form action="{{ route('admin.settings.reset-activities') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data aktivitas pada periode ini? Proses ini tidak dapat dibatalkan.')">
+                    @csrf
+                    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-end">
+                        <div class="w-full sm:w-1/3">
+                            <label class="block text-sm font-medium text-gray-300 mb-1.5">Tipe Pemilihan</label>
+                            <select name="activity_delete_type" id="activity_delete_type" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                <option value="date_range">Rentang Tanggal</option>
+                                <option value="exact_month">Bulan Spesifik</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 w-full" id="activity_container_date">
+                            <div class="flex flex-row gap-2">
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-gray-300 mb-1.5">Dari Tanggal</label>
+                                    <input type="date" name="activity_start_date" id="activity_start_date" max="{{ date('Y-m-d') }}" required
+                                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-gray-300 mb-1.5">Sampai Tanggal</label>
+                                    <input type="date" name="activity_end_date" id="activity_end_date" max="{{ date('Y-m-d') }}" required
+                                        class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 w-full hidden" id="activity_container_month">
+                            <label class="block text-sm font-medium text-gray-300 mb-1.5">Pilih Bulan</label>
+                            <input type="month" name="activity_specific_month" id="activity_specific_month" max="{{ date('Y-m') }}"
+                                class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-red-500 focus:border-red-500">
+                        </div>
+                        <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-red-600/90 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-red-900/20 whitespace-nowrap mt-3 sm:mt-0">
+                            Hapus Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
 <script>
+    document.getElementById('unlock-danger-zone').addEventListener('click', function() {
+        if (confirm('PERINGATAN: Area ini berisi menu untuk menghapus data sistem secara permanen. Apakah Anda yakin ingin membukanya?')) {
+            document.getElementById('danger-zone-content').classList.remove('hidden');
+            this.classList.add('hidden');
+        }
+    });
+
     document.getElementById('app_logo').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
@@ -90,6 +204,52 @@
                 }
             }
             reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('delete_type').addEventListener('change', function(e) {
+        const type = e.target.value;
+        const dateContainer = document.getElementById('container_date');
+        const monthContainer = document.getElementById('container_month');
+        const startDate = document.getElementById('start_date');
+        const endDate = document.getElementById('end_date');
+        const specificMonth = document.getElementById('specific_month');
+
+        if (type === 'date_range') {
+            dateContainer.classList.remove('hidden');
+            monthContainer.classList.add('hidden');
+            startDate.required = true;
+            endDate.required = true;
+            specificMonth.required = false;
+        } else {
+            dateContainer.classList.add('hidden');
+            monthContainer.classList.remove('hidden');
+            startDate.required = false;
+            endDate.required = false;
+            specificMonth.required = true;
+        }
+    });
+
+    document.getElementById('activity_delete_type').addEventListener('change', function(e) {
+        const type = e.target.value;
+        const dateContainer = document.getElementById('activity_container_date');
+        const monthContainer = document.getElementById('activity_container_month');
+        const startDate = document.getElementById('activity_start_date');
+        const endDate = document.getElementById('activity_end_date');
+        const specificMonth = document.getElementById('activity_specific_month');
+
+        if (type === 'date_range') {
+            dateContainer.classList.remove('hidden');
+            monthContainer.classList.add('hidden');
+            startDate.required = true;
+            endDate.required = true;
+            specificMonth.required = false;
+        } else {
+            dateContainer.classList.add('hidden');
+            monthContainer.classList.remove('hidden');
+            startDate.required = false;
+            endDate.required = false;
+            specificMonth.required = true;
         }
     });
 </script>

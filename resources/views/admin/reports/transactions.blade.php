@@ -87,5 +87,6 @@
             </tbody>
         </table>
     </div>
+    <x-table-pagination :paginator="$report['transactions']" />
 </div>
 @endsection

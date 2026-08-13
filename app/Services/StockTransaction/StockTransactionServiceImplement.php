@@ -59,6 +59,26 @@ class StockTransactionServiceImplement implements StockTransactionService
         return DB::transaction(function () use ($data) {
             $product = $this->productRepository->findById($data['product_id']);
 
+            $newSupplierId = array_key_exists('supplier_id', $data) ? $data['supplier_id'] : $product->supplier_id;
+            $newSku = !empty($data['reference_number']) ? $data['reference_number'] : $product->sku;
+
+            if ($newSupplierId != $product->supplier_id || $newSku !== $product->sku) {
+                // Buat produk baru yang identik tapi dengan supplier & sku berbeda
+                $newProductData = [
+                    'category_id'    => $product->category_id,
+                    'supplier_id'    => $newSupplierId,
+                    'name'           => $product->name,
+                    'sku'            => $newSku,
+                    'description'    => $product->description,
+                    'purchase_price' => $product->purchase_price,
+                    'selling_price'  => $product->selling_price,
+                    'image'          => $product->image,
+                    'minimum_stock'  => $product->minimum_stock,
+                ];
+                $product = $this->productRepository->create($newProductData);
+                $data['product_id'] = $product->id;
+            }
+
             $transaction = $this->repository->create([
                 'product_id'       => $data['product_id'],
                 'user_id'          => Auth::id(),
@@ -164,6 +184,15 @@ class StockTransactionServiceImplement implements StockTransactionService
             "Tolak/Batal {$jenis}: {$transaction->product->name} sebanyak {$transaction->quantity} " . ($transaction->product->unit ?? 'pcs')
         );
 
+        $productId = $transaction->product_id;
+        $transactionCount = DB::table('stock_transactions')->where('product_id', $productId)->count();
+
+        if ($transactionCount <= 1) {
+            // Hapus transaksi dan produknya karena produk ini baru dibuat hanya untuk transaksi ini dan dibatalkan
+            $transaction->delete();
+            return $this->productRepository->delete($productId);
+        }
+
         return $this->repository->updateStatus($id, Stock_transaction::STATUS_CANCELLED);
     }
 
@@ -193,5 +222,79 @@ class StockTransactionServiceImplement implements StockTransactionService
     {
         $prefix = $type === 'IN' ? 'TRX-IN' : 'TRX-OUT';
         return $prefix . '-' . date('Ymd') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Compress transaction history into Saldo Awal.
+     *
+     * @param string $mode
+     * @param string|array $value
+     * @return void
+     */
+    public function resetTransactionHistory(string $mode, string|array $value): void
+    {
+        DB::transaction(function () use ($mode, $value) {
+            $query = Stock_transaction::query();
+            $summaryDate = null;
+            $logMessage = '';
+            
+            if ($mode === 'range') {
+                $query->whereBetween('date', [$value[0], $value[1]]);
+                $summaryDate = $value[1]; // Put the summary on the end date
+                $logMessage = "Kompresi data transaksi dari {$value[0]} hingga {$value[1]} menjadi Saldo Awal.";
+            } elseif ($mode === 'month') {
+                $parts = explode('-', $value); // YYYY-MM
+                $query->whereYear('date', $parts[0])->whereMonth('date', $parts[1]);
+                $summaryDate = \Carbon\Carbon::createFromDate($parts[0], $parts[1])->endOfMonth()->toDateString();
+                // Avoid using endOfMonth if it's in the future, fallback to today if current month
+                if ($summaryDate > today()->toDateString()) {
+                    $summaryDate = today()->toDateString();
+                }
+                $monthName = \Carbon\Carbon::createFromDate($parts[0], $parts[1])->translatedFormat('F Y');
+                $logMessage = "Kompresi data transaksi pada bulan $monthName menjadi Saldo Awal.";
+            }
+
+            // Get confirmed transactions to summarize
+            $confirmedTx = (clone $query)->where('status', Stock_transaction::STATUS_CONFIRMED)->get();
+            $productSummaries = [];
+            
+            foreach ($confirmedTx as $tx) {
+                $pid = $tx->product_id;
+                if (!isset($productSummaries[$pid])) {
+                    $productSummaries[$pid] = 0;
+                }
+                
+                if ($tx->type === Stock_transaction::TYPE_IN) {
+                    $productSummaries[$pid] += $tx->quantity;
+                } else {
+                    $productSummaries[$pid] -= $tx->quantity;
+                }
+            }
+
+            // Delete all matched old transactions
+            $query->delete();
+
+            // Insert summaries
+            foreach ($productSummaries as $pid => $netQuantity) {
+                if ($netQuantity != 0) {
+                    Stock_transaction::create([
+                        'product_id' => $pid,
+                        'user_id' => Auth::id() ?? 1, // Fallback to 1 if no auth (e.g., CLI)
+                        'type' => $netQuantity > 0 ? Stock_transaction::TYPE_IN : Stock_transaction::TYPE_OUT,
+                        'quantity' => abs($netQuantity),
+                        'status' => Stock_transaction::STATUS_CONFIRMED,
+                        'notes' => 'Summary Saldo Awal (Reset System)',
+                        'date' => $summaryDate
+                    ]);
+                }
+            }
+            
+            $this->activityLogService->log(
+                'reset_transactions',
+                'Setting',
+                1,
+                $logMessage
+            );
+        });
     }
 }

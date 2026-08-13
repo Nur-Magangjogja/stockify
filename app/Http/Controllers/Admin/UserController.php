@@ -14,7 +14,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $filters = $request->only(['search', 'role', 'is_active']);
-        $users   = $this->userService->getAllUsers($filters, 15);
+        $users   = $this->userService->getAllUsers($filters, 10);
         return view('admin.users.index', compact('users', 'filters'));
     }
 

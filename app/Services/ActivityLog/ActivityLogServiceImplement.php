@@ -68,4 +68,35 @@ class ActivityLogServiceImplement implements ActivityLogService
     {
         return $this->repository->getPaginated($filters, $perPage);
     }
+
+    /**
+     * Delete activity logs based on specific date range or month.
+     *
+     * @param string $mode 'range' or 'month'
+     * @param string|array $value Array [start, end] or Month (Y-m)
+     * @return void
+     */
+    public function deleteActivityLogs(string $mode, string|array $value): void
+    {
+        $query = \App\Models\ActivityLog::query();
+        $logMessage = '';
+        
+        if ($mode === 'range') {
+            // Need to cover the entire day of the end_date by appending time
+            $startDate = $value[0] . ' 00:00:00';
+            $endDate = $value[1] . ' 23:59:59';
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+            $logMessage = "Menghapus data aktivitas pengguna dari {$value[0]} hingga {$value[1]}.";
+        } elseif ($mode === 'month') {
+            $parts = explode('-', $value);
+            $query->whereYear('created_at', $parts[0])->whereMonth('created_at', $parts[1]);
+            $monthName = \Carbon\Carbon::createFromDate($parts[0], $parts[1])->translatedFormat('F Y');
+            $logMessage = "Menghapus data aktivitas pengguna pada bulan $monthName.";
+        }
+
+        $query->delete();
+        
+        // Log this action as a system action, not deleted!
+        $this->log('delete_activities', 'Setting', 1, $logMessage);
+    }
 }

@@ -50,7 +50,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Supplier</label>
-                    <select name="supplier_id" id="supplier-select" disabled class="w-full bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg px-3 py-2.5 cursor-not-allowed pointer-events-none">
+                    <select name="supplier_id" id="supplier-select" class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Tanpa Supplier --</option>
                         @foreach($suppliers as $supplier)
                         <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option>
@@ -65,17 +65,17 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1.5">No. Referensi</label>
-                <input type="text" name="reference_number" id="reference-input" value="{{ old('reference_number') }}" readonly
-                    class="w-full bg-gray-800 border border-gray-700 text-gray-400 text-sm rounded-lg px-3 py-2.5 cursor-not-allowed pointer-events-none"
-                    placeholder="Auto-generate sesuai SKU">
+                <label class="block text-sm font-medium text-gray-300 mb-1.5">No. Referensi / SKU</label>
+                <input type="text" name="reference_number" id="reference-input" value="{{ old('reference_number') }}"
+                    class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Masukkan SKU / No referensi">
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1.5">Catatan</label>
-                <textarea name="notes" rows="2"
-                    class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Catatan tambahan (opsional)">{{ old('notes') }}</textarea>
+            <div class="bg-blue-900/20 border border-blue-700/50 rounded-lg p-3 text-sm text-blue-300 flex items-start gap-2">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <p><strong>Catatan:</strong> Jika Anda mengubah <b>Supplier</b> atau <b>No. Referensi / SKU</b>, sistem akan otomatis membuat salinan produk baru untuk transaksi ini. Pastikan Anda menggunakan kode SKU yang <b>baru dan unik</b> (belum pernah ada) jika mengganti Supplier.</p>
             </div>
 
             <div class="flex gap-3 pt-2">

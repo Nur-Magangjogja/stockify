@@ -86,11 +86,11 @@
                 @forelse($transactions as $tx)
                 <tr class="hover:bg-gray-750 transition-colors">
                     <td class="px-5 py-3.5">
-                        <span class="font-mono text-xs text-gray-300">{{ $tx->reference_number ?? '-' }}</span>
+                        <p class="font-mono text-xs text-gray-300">{{ $tx->reference_number }}</p>
+                        <p class="text-[11px] text-gray-400 mt-0.5">{{ $tx->product->code }}</p>
                     </td>
                     <td class="px-4 py-3.5">
                         <p class="text-white font-medium truncate max-w-xs">{{ $tx->product->name }}</p>
-                        <p class="text-xs text-gray-400">{{ $tx->product->code }}</p>
                     </td>
                     <td class="px-4 py-3.5">
                         <span class="px-2.5 py-1 text-xs font-medium rounded-full {{ $tx->type === 'Masuk' ? 'stock-badge-in' : 'stock-badge-out' }}">

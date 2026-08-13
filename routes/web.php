@@ -48,6 +48,8 @@ Route::prefix('admin')
     // Settings Route
     Route::get('/settings', [Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [Admin\SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/reset-transactions', [Admin\SettingController::class, 'resetTransactions'])->name('settings.reset-transactions');
+    Route::post('/settings/reset-activities', [Admin\SettingController::class, 'resetActivities'])->name('settings.reset-activities');
 
     Route::post('products/import', [Admin\ProductController::class, 'import'])->name('products.import');
     Route::resource('products', Admin\ProductController::class);

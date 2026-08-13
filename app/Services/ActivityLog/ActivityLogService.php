@@ -40,4 +40,13 @@ interface ActivityLogService
      * @return mixed
      */
     public function getActivitiesPaginated(array $filters = [], int $perPage = 20);
+
+    /**
+     * Delete activity logs based on specific date range or month.
+     *
+     * @param string $mode 'range' or 'month'
+     * @param string|array $value Array [start, end] or Month (Y-m)
+     * @return void
+     */
+    public function deleteActivityLogs(string $mode, string|array $value): void;
 }

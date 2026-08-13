@@ -39,6 +39,22 @@
             'value_text' => 'text-transparent bg-clip-text bg-gradient-to-r from-white to-amber-200',
             'glow' => 'hover:shadow-amber-900/30',
         ],
+        'purple' => [
+            'bg' => 'bg-purple-900/20',
+            'border' => 'border-purple-700/30',
+            'icon_bg' => 'bg-purple-500/20',
+            'icon_text' => 'text-purple-400',
+            'value_text' => 'text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-200',
+            'glow' => 'hover:shadow-purple-900/30',
+        ],
+        'indigo' => [
+            'bg' => 'bg-indigo-900/20',
+            'border' => 'border-indigo-700/30',
+            'icon_bg' => 'bg-indigo-500/20',
+            'icon_text' => 'text-indigo-400',
+            'value_text' => 'text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200',
+            'glow' => 'hover:shadow-indigo-900/30',
+        ],
     ];
     $theme = $colorMap[$color] ?? $colorMap['blue'];
 @endphp

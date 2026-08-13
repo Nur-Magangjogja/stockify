@@ -8,17 +8,21 @@ interface ReportService
      * Get stock summary report.
      *
      * @param array $filters
+     * @param bool $paginate
+     * @param int $perPage
      * @return array
      */
-    public function getStockSummary(array $filters = []): array;
+    public function getStockSummary(array $filters = [], bool $paginate = true, int $perPage = 20): array;
 
     /**
      * Get transaction report.
      *
      * @param array $filters
+     * @param bool $paginate
+     * @param int $perPage
      * @return array
      */
-    public function getTransactionReport(array $filters = []): array;
+    public function getTransactionReport(array $filters = [], bool $paginate = true, int $perPage = 20): array;
 
     /**
      * Get activity report (paginated).
@@ -33,5 +37,5 @@ interface ReportService
      *
      * @return array
      */
-    public function getDashboardSummary(): array;
+    public function getDashboardSummary(?int $month = null, ?int $year = null): array;
 }

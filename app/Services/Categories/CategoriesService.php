@@ -7,7 +7,7 @@ use LaravelEasyRepository\BaseService;
 interface CategoriesService extends BaseService{
 
     public function getAllCategories(bool $activeOnly = false);
-    public function getAllCategoriesPaginated(int $perPage = 15);
+    public function getAllCategoriesPaginated(int $perPage = 15, array $filters = []);
     public function getCategory(int $id);
     public function createCategory(array $data);
     public function updateCategory(int $id, array $data);

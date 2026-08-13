@@ -10,9 +10,10 @@ class SupplierController extends Controller
 {
     public function __construct(protected SuppilersService $supplierService) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $suppliers = $this->supplierService->getAllSuppliersPaginated(15);
+        $search = $request->input('search');
+        $suppliers = $this->supplierService->getAllSuppliersPaginated(15, $search);
         return view('admin.suppliers.index', compact('suppliers'));
     }
 

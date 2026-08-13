@@ -11,28 +11,33 @@
     btn-label="Tambah Supplier"
 />
 
+{{-- Search Filter --}}
+<div class="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-5">
+    <form method="GET" action="{{ request()->url() }}" class="flex gap-3">
+        <input type="text" name="search" value="{{ request('search') }}"
+            placeholder="Cari nama supplier, nomor telepon, atau email..."
+            class="flex-1 bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-4 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+        <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all">Cari</button>
+        @if(request('search'))
+        <a href="{{ request()->url() }}" class="px-5 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-all">Reset</a>
+        @endif
+    </form>
+</div>
+
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
     @forelse($suppliers as $supplier)
     <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
-        <div class="flex items-start justify-between mb-3">
+        <div class="flex items-start justify-between pb-3 mb-3 border-b border-gray-700">
             <div>
                 <h3 class="font-semibold text-white">{{ $supplier->name }}</h3>
-                <p class="text-xs text-gray-400 mt-0.5">{{ $supplier->city ?? 'Kota tidak diketahui' }}</p>
             </div>
-            <span class="px-2 py-0.5 text-xs rounded-full {{ $supplier->is_active ? 'bg-green-900/40 text-green-400' : 'bg-gray-700 text-gray-400' }}">
-                {{ $supplier->is_active ? 'Aktif' : 'Non-aktif' }}
+            <span class="px-2 py-0.5 text-xs rounded-full bg-green-900/40 text-green-400">
+                Aktif
             </span>
         </div>
 
         <div class="space-y-1.5 text-sm">
-            @if($supplier->contact_person)
-            <div class="flex items-center gap-2 text-gray-400">
-                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                </svg>
-                <span>{{ $supplier->contact_person }}</span>
-            </div>
-            @endif
+
             @if($supplier->phone)
             <div class="flex items-center gap-2 text-gray-400">
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,10 +54,18 @@
                 <span class="truncate">{{ $supplier->email }}</span>
             </div>
             @endif
+            @if($supplier->address)
+            <div class="flex items-start gap-2 text-gray-400 mt-2">
+                <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="line-clamp-2 text-xs" title="{{ $supplier->address }}">{{ $supplier->address }}</span>
+            </div>
+            @endif
         </div>
 
-        <div class="mt-3 pt-3 border-t border-gray-700 flex items-center justify-between">
-            <span class="text-xs text-gray-500">{{ $supplier->products_count }} produk</span>
+        <div class="mt-4 flex items-center justify-end">
             @if(auth()->user()->isAdmin())
             <div class="flex gap-1">
                 <a href="{{ route('admin.suppliers.edit', $supplier->id) }}"
@@ -79,7 +92,7 @@
     @endforelse
 </div>
 
-@if($suppliers->hasPages())
-        <div class="mt-4">{{ $suppliers->appends(request()->query())->links('components.pagination') }}</div>
-@endif
+<div>
+    <x-table-pagination :paginator="$suppliers" />
+</div>
 @endsection

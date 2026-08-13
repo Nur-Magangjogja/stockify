@@ -17,9 +17,14 @@ class DashboardController extends Controller
         protected ActivityLogService $activityLogService
     ) {}
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $stats        = $this->reportService->getDashboardSummary();
+        $period = $request->input('period', now()->format('Y-m'));
+        $parts = explode('-', $period);
+        $year = $parts[0] ?? now()->year;
+        $month = $parts[1] ?? now()->month;
+
+        $stats        = $this->reportService->getDashboardSummary((int) $month, (int) $year);
         $lowStockItems = $this->productService->getLowStockProducts(8);
         $recentActivities = $this->activityLogService->getRecentActivities(10);
 

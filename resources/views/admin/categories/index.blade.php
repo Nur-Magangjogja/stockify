@@ -11,6 +11,28 @@
     btn-label="Tambah Kategori"
 />
 
+{{-- Search Filter --}}
+<div class="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-6">
+    <form method="GET" action="{{ request()->url() }}" class="flex flex-col md:flex-row gap-3">
+        <div class="flex-1">
+            <input type="text" name="search_category" value="{{ request('search_category') }}"
+                placeholder="Cari Kategori..."
+                class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div class="flex-1">
+            <input type="text" name="search_product" value="{{ request('search_product') }}"
+                placeholder="Cari Produk di dalam kategori..."
+                class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div class="flex gap-2">
+            <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all">Cari</button>
+            @if(request('search_category') || request('search_product'))
+            <a href="{{ request()->url() }}" class="px-5 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-all">Reset</a>
+            @endif
+        </div>
+    </form>
+</div>
+
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
     @forelse($categories as $category)
     <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-lg overflow-hidden flex flex-col">

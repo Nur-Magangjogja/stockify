@@ -7,7 +7,7 @@ use LaravelEasyRepository\BaseService;
 interface SuppilersService extends BaseService{
 
     public function getAllSuppliers(bool $activeOnly = false);
-    public function getAllSuppliersPaginated(int $perPage = 15);
+    public function getAllSuppliersPaginated(int $perPage = 15, string $search = null);
     public function getSupplier(int $id);
     public function createSupplier(array $data);
     public function updateSupplier(int $id, array $data);

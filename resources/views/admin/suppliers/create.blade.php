@@ -26,14 +26,12 @@
                         class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="021-5551234">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1.5">Kota</label>
-                    <input type="text" name="city" value="{{ old('city') }}"
+
+                <div class="sm:col-span-2">
+                    <label class="block text-sm font-medium text-gray-300 mb-1.5">Alamat Lengkap</label>
+                    <textarea name="address" rows="3"
                         class="w-full bg-gray-900 border border-gray-600 text-gray-300 text-sm rounded-lg px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Jakarta">
-                </div>
-                <div class="flex items-end pb-1">
-                    <!-- Checkbox is_active dihapus karena tidak ada di database supplier -->
+                        placeholder="Alamat lengkap supplier...">{{ old('address') }}</textarea>
                 </div>
             </div>
             <div class="flex gap-3 pt-2">

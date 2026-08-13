@@ -3,6 +3,10 @@ import './bootstrap';
 
 document.addEventListener('DOMContentLoaded', () => {
 	const chartCanvas = document.getElementById('transactionChart');
+	const categoryCanvas = document.getElementById('categoryChart');
+	const transactionContainer = document.getElementById('transactionChartContainer');
+	const categoryContainer = document.getElementById('categoryChartContainer');
+	
 	if (chartCanvas && typeof Chart !== 'undefined') {
 		const labels = JSON.parse(chartCanvas.dataset.labels || '[]');
 		const dataMasuk = JSON.parse(chartCanvas.dataset.masuk || '[]');
@@ -37,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			},
 			options: {
 				responsive: true,
+				maintainAspectRatio: false,
 				plugins: {
 					legend: { display: false },
 					tooltip: {
@@ -59,6 +64,104 @@ document.addEventListener('DOMContentLoaded', () => {
 					},
 				},
 			},
+		});
+	}
+
+	if (categoryCanvas && typeof Chart !== 'undefined') {
+		const catLabels = JSON.parse(categoryCanvas.dataset.labels || '[]');
+		const catStock = JSON.parse(categoryCanvas.dataset.stock || '[]');
+		const catNames = JSON.parse(categoryCanvas.dataset.categories || '[]');
+
+		new Chart(categoryCanvas.getContext('2d'), {
+			type: 'bar',
+			data: {
+				labels: catLabels,
+				datasets: [
+					{
+						label: 'Total Stok',
+						data: catStock,
+						backgroundColor: 'rgba(59, 130, 246, 0.8)', // blue-500
+						borderColor: '#3B82F6',
+						borderWidth: 1,
+						borderRadius: 4,
+						barThickness: 20,
+						maxBarThickness: 30,
+					},
+				],
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					legend: { display: false },
+					tooltip: {
+						backgroundColor: '#1F2937',
+						borderColor: '#374151',
+						borderWidth: 1,
+						titleColor: '#F9FAFB',
+						bodyColor: '#9CA3AF',
+						callbacks: {
+							beforeBody: function(context) {
+								const index = context[0].dataIndex;
+								return 'Kategori: ' + (catNames[index] || '-');
+							}
+						}
+					},
+				},
+				scales: {
+					x: {
+						ticks: { color: '#6B7280', font: { size: 10 }, maxRotation: 45, minRotation: 45 },
+						grid: { display: false },
+					},
+					y: {
+						ticks: { color: '#6B7280', font: { size: 10 } },
+						grid: { color: 'rgba(75, 85, 99, 0.3)' },
+						beginAtZero: true,
+					},
+				},
+			},
+		});
+	}
+
+	// Logic for toggling charts
+	const btnTransaction = document.getElementById('btnShowTransaction');
+	const btnCategory = document.getElementById('btnShowCategory');
+	const legendTransaction = document.getElementById('transactionLegend');
+	const titleChart = document.getElementById('mainChartTitle');
+	const subtitleChart = document.getElementById('mainChartSubtitle');
+	const chartFilter = document.getElementById('transactionChartFilter');
+
+	if (btnTransaction && btnCategory) {
+		const setActiveBtn = (active, inactive) => {
+			active.classList.replace('text-gray-400', 'text-blue-400');
+			active.classList.replace('hover:text-gray-300', 'bg-blue-500/20');
+			active.classList.add('bg-blue-500/20');
+			
+			inactive.classList.replace('text-blue-400', 'text-gray-400');
+			inactive.classList.replace('bg-blue-500/20', 'hover:text-gray-300');
+			inactive.classList.remove('bg-blue-500/20');
+		};
+
+		btnTransaction.addEventListener('click', () => {
+			transactionContainer?.classList.remove('hidden');
+			categoryContainer?.classList.add('hidden');
+			legendTransaction?.classList.remove('hidden');
+			chartFilter?.classList.remove('hidden');
+			
+			titleChart.textContent = 'Grafik Transaksi';
+			subtitleChart.textContent = transactionContainer?.dataset.subtitle || new Date().toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+			setActiveBtn(btnTransaction, btnCategory);
+		});
+
+		btnCategory.addEventListener('click', () => {
+			transactionContainer?.classList.add('hidden');
+			categoryContainer?.classList.remove('hidden');
+			legendTransaction?.classList.add('hidden');
+			chartFilter?.classList.add('hidden');
+			
+			titleChart.textContent = 'Stok per Produk';
+			subtitleChart.textContent = 'Berdasarkan Kategori';
+			setActiveBtn(btnCategory, btnTransaction);
 		});
 	}
 
@@ -133,6 +236,17 @@ document.addEventListener('DOMContentLoaded', () => {
 	passwordToggle?.addEventListener('click', () => {
 		passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
 	});
+
+	// Wheel to scroll logic for horizontal chart container
+	if (categoryContainer) {
+		categoryContainer.addEventListener('wheel', (e) => {
+			// If scrolling vertically, translate it to horizontal scroll
+			if (e.deltaY !== 0) {
+				e.preventDefault();
+				categoryContainer.scrollLeft += e.deltaY;
+			}
+		});
+	}
 
 	document.querySelectorAll('[data-confirm]').forEach((form) => {
 		form.addEventListener('submit', (event) => {

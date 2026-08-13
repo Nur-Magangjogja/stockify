@@ -45,14 +45,22 @@ class StockTransactionRepositoryImplement extends Eloquent implements StockTrans
             $query->where('product_id', $filters['product_id']);
         }
 
-        if (!empty($filters['date_from']) && !empty($filters['date_to'])) {
-            $query->dateRange($filters['date_from'], $filters['date_to']);
+        if (!empty($filters['date_from'])) {
+            $query->whereDate('date', '>=', $filters['date_from']);
+        }
+
+        if (!empty($filters['date_to'])) {
+            $query->whereDate('date', '<=', $filters['date_to']);
         }
 
         if (!empty($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('notes', 'like', "%{$filters['search']}%")
-                  ->orWhereHas('product', fn($p) => $p->where('name', 'like', "%{$filters['search']}%"));
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('notes', 'like', "%{$search}%")
+                  ->orWhereHas('product', function($p) use ($search) {
+                      $p->where('name', 'like', "%{$search}%")
+                        ->orWhere('sku', 'like', "%{$search}%");
+                  });
             });
         }
 
@@ -100,7 +108,12 @@ class StockTransactionRepositoryImplement extends Eloquent implements StockTrans
      */
     public function getTodayIn(): int
     {
-        return $this->model->today()->in()->confirmed()->count();
+        return $this->model->today()->in()->confirmed()
+            ->where(function($q) {
+                $q->where('notes', '!=', 'Summary Saldo Awal (Reset System)')
+                  ->orWhereNull('notes');
+            })
+            ->count();
     }
 
     /**
@@ -110,7 +123,12 @@ class StockTransactionRepositoryImplement extends Eloquent implements StockTrans
      */
     public function getTodayOut(): int
     {
-        return $this->model->today()->out()->confirmed()->count();
+        return $this->model->today()->out()->confirmed()
+            ->where(function($q) {
+                $q->where('notes', '!=', 'Summary Saldo Awal (Reset System)')
+                  ->orWhereNull('notes');
+            })
+            ->count();
     }
 
     /**
@@ -129,6 +147,10 @@ class StockTransactionRepositoryImplement extends Eloquent implements StockTrans
             ->selectRaw('DAY(date) as day, type, SUM(quantity) as total')
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
+            ->where(function($q) {
+                $q->where('notes', '!=', 'Summary Saldo Awal (Reset System)')
+                  ->orWhereNull('notes');
+            })
             ->confirmed()
             ->groupBy('day', 'type')
             ->get();
@@ -165,6 +187,10 @@ class StockTransactionRepositoryImplement extends Eloquent implements StockTrans
         return $this->model->in()->confirmed()
             ->whereMonth('date', now()->month)
             ->whereYear('date', now()->year)
+            ->where(function($q) {
+                $q->where('notes', '!=', 'Summary Saldo Awal (Reset System)')
+                  ->orWhereNull('notes');
+            })
             ->sum('quantity');
     }
 
@@ -178,6 +204,10 @@ class StockTransactionRepositoryImplement extends Eloquent implements StockTrans
         return $this->model->out()->confirmed()
             ->whereMonth('date', now()->month)
             ->whereYear('date', now()->year)
+            ->where(function($q) {
+                $q->where('notes', '!=', 'Summary Saldo Awal (Reset System)')
+                  ->orWhereNull('notes');
+            })
             ->sum('quantity');
     }
 }
