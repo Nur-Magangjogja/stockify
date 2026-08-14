@@ -82,6 +82,12 @@
 		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
+	/* Bugfix: backdrop-filter pada elemen <select> native menyebabkan freeze/tidak bisa di-klik di Chrome */
+	select.input-field {
+		backdrop-filter: none;
+		background: #111827;
+	}
+
 	.input-field:focus {
 		border-color: rgba(59, 130, 246, 0.8);
 		background: rgba(17, 24, 39, 0.9);

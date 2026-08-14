@@ -57,6 +57,14 @@ class StockTransactionServiceImplement implements StockTransactionService
     public function recordStockIn(array $data): Stock_transaction
     {
         return DB::transaction(function () use ($data) {
+            $hasPending = Stock_transaction::where('product_id', $data['product_id'])
+                ->where('status', Stock_transaction::STATUS_PENDING)
+                ->exists();
+
+            if ($hasPending) {
+                throw new \Exception('Produk ini masih memiliki transaksi yang belum dikonfirmasi (Pending). Silakan konfirmasi atau batalkan transaksi sebelumnya terlebih dahulu.');
+            }
+
             $product = $this->productRepository->findById($data['product_id']);
 
             $newSupplierId = array_key_exists('supplier_id', $data) ? $data['supplier_id'] : $product->supplier_id;
@@ -109,6 +117,14 @@ class StockTransactionServiceImplement implements StockTransactionService
     public function recordStockOut(array $data): Stock_transaction
     {
         return DB::transaction(function () use ($data) {
+            $hasPending = Stock_transaction::where('product_id', $data['product_id'])
+                ->where('status', Stock_transaction::STATUS_PENDING)
+                ->exists();
+
+            if ($hasPending) {
+                throw new \Exception('Produk ini masih memiliki transaksi yang belum dikonfirmasi (Pending). Silakan konfirmasi atau batalkan transaksi sebelumnya terlebih dahulu.');
+            }
+
             $product = $this->productRepository->findById($data['product_id']);
 
             $transaction = $this->repository->create([

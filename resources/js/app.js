@@ -256,10 +256,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Settings JS Logic
 	const unlockDangerZone = document.getElementById('unlock-danger-zone');
 	if (unlockDangerZone) {
-		unlockDangerZone.addEventListener('click', function() {
+		unlockDangerZone.addEventListener('click', function(e) {
+			e.preventDefault();
+			// Gunakan setTimeout (setTimeout 0) setelah confirm untuk menghindari bug freeze pada elemen <select> native di browser berbasis Chromium
 			if (confirm('PERINGATAN: Area ini berisi menu untuk menghapus data sistem secara permanen. Apakah Anda yakin ingin membukanya?')) {
-				document.getElementById('danger-zone-content').classList.remove('hidden');
-				this.classList.add('hidden');
+				setTimeout(() => {
+					document.getElementById('danger-zone-content').classList.remove('hidden');
+					this.classList.add('hidden');
+					// Kembalikan fokus ke body agar state browser normal
+					document.activeElement.blur();
+				}, 10);
 			}
 		});
 	}
